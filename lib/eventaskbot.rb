@@ -8,8 +8,8 @@ module Eventaskbot
   # 設定を与える
   # @return [Eventaskbot]
   #
-  def self.configure
-    yield Eventaskbot::Configurable if block_given?
+  def self.configure(value)
+    Eventaskbot::Configurable.configure(value)
     self
   end
 end

@@ -6,9 +6,7 @@ module Eventaskbot
     #
     # 設定をマージする
     #
-    def self.configure
-      yield self if block_given?
-      self
+    def self.configure(value)
     end
 
     #

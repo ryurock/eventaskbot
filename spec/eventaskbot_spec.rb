@@ -9,5 +9,9 @@ describe Eventaskbot, "Eventaskbot Base" do
   it "モジュールである事の確認" do
     Eventaskbot.class.should == Module
   end
+
+  it "configuraの戻り値はEventaskbotモジュールである" do
+    Eventaskbot.configure({:hoge => "fuga"}).should == Eventaskbot
+  end
 end
 
