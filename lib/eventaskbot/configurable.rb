@@ -1,12 +1,21 @@
 module Eventaskbot
   module Configurable
 
-    attr_accessor :options
+    attr_accessor :plugins, :storage, :service
 
     #
     # 設定をマージする
     #
-    def self.configure(value)
+    def self.configure
+      yield self if block_given?
+      self
+    end
+
+    #
+    # 設定を取得する
+    #
+    def self.options
+      @options.keys
     end
 
     #
