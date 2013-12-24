@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require File.expand_path(File.join('./', 'spec_helper'), File.dirname(__FILE__))
 
 require 'eventaskbot'
@@ -7,11 +9,8 @@ describe Eventaskbot, "Eventaskbot Base" do
   end
 
   it "モジュールである事の確認" do
-    Eventaskbot.class.should == Module
+    expect(Eventaskbot.class).to eq(Module)
   end
 
-  it "configuraの戻り値はEventaskbotモジュールである" do
-    Eventaskbot.configure({:hoge => "fuga"}).should == Eventaskbot
-  end
 end
 
