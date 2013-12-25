@@ -48,16 +48,6 @@ describe Eventaskbot::Configurable, "Eventaskbot Configurable Class" do
     expect(Eventaskbot.keys).to eq(assert)
   end
 
-  it "keyメソッドで該当する値が取得できる(symでも文字列でも）" do
-    assert = "hoge"
-    Eventaskbot.configure do |v|
-      v.plugin_dir = assert
-    end
-
-    expect(Eventaskbot.key(:plugin_dir)).to  eq("hoge")
-    expect(Eventaskbot.key("plugin_dir")).to  eq("hoge")
-  end
-
   it "resetメソッドで設定した変数を初期化できる" do
     assert = [{:plugin_dir => nil}]
 

@@ -37,12 +37,8 @@ module Eventaskbot
     end
 
     #
-    # 設定キーの値を取得する
+    # 設定の初期化を行う
     #
-    def key(name)
-      self.instance_eval("@" << name.to_s)
-    end
-
     def reset
       instance_variables.each do |var|
         instance_variable_set(var, nil)
