@@ -18,7 +18,7 @@ module Eventaskbot
     #
     # コマンドラインオプションを設定にマージする
     #
-    def merge
+    def parse
       @opts = {}
 
       OptionParser.new do |opt|

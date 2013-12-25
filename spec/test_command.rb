@@ -7,4 +7,4 @@ $LOAD_PATH << path
 require 'eventaskbot'
 require 'eventaskbot/command'
 command = Eventaskbot::Command.new
-command.merge
+command.parse

@@ -27,41 +27,41 @@ describe Eventaskbot::Command, "Eventaskbot Command Module" do
   it "フォーマットオプションで許容しないフォーマットの場合は例外が発生" do
     ARGV << '--format=fuga'
     command = Eventaskbot::Command.new
-    expect{ command.merge }.to raise_error
+    expect{ command.parse }.to raise_error
   end
 
   it "フォーマットオプションがjsonの場合は例外が発生しない" do
     ARGV << 'hoge'
     ARGV << '--format=json'
     command = Eventaskbot::Command.new
-    expect{ command.merge }.not_to raise_error
+    expect{ command.parse }.not_to raise_error
   end
 
   it "フォーマットオプションがtextの場合は例外が発生しない" do
     ARGV << 'hoge'
     ARGV << '--format=text'
     command = Eventaskbot::Command.new
-    expect{ command.merge }.not_to raise_error
+    expect{ command.parse }.not_to raise_error
   end
 
   it "フォーマットオプションがhashの場合は例外が発生しない" do
     ARGV << 'hoge'
     ARGV << '--format=hash'
     command = Eventaskbot::Command.new
-    expect{ command.merge }.not_to raise_error
+    expect{ command.parse }.not_to raise_error
   end
 
   it "第一引数がない場合は例外が発生する" do
     ARGV << '--format=hash'
     command = Eventaskbot::Command.new
-    expect{ command.merge }.to raise_error
+    expect{ command.parse }.to raise_error
   end
 
   it "hashフォーマットを指定した場合はoptsメンバー変数にhashが入る" do
     ARGV << 'hoge'
     ARGV << '--format=hash'
     command = Eventaskbot::Command.new
-    command.merge
+    command.parse
     expect(command.opts[:format]).to eq("hash")
   end
 
@@ -69,7 +69,7 @@ describe Eventaskbot::Command, "Eventaskbot Command Module" do
     ARGV << 'hoge'
     ARGV << '--format=json'
     command = Eventaskbot::Command.new
-    command.merge
+    command.parse
     expect(command.opts[:format]).to eq("json")
   end
 
@@ -77,28 +77,28 @@ describe Eventaskbot::Command, "Eventaskbot Command Module" do
     ARGV << 'hoge'
     ARGV << '--format=text'
     command = Eventaskbot::Command.new
-    command.merge
+    command.parse
     expect(command.opts[:format]).to eq("text")
   end
 
   it "フォーマットを指定しない場合のデフォルトフォーマットはjson" do
     ARGV << 'hoge'
     command = Eventaskbot::Command.new
-    command.merge
+    command.parse
     expect(command.opts[:format]).to eq("json")
   end
 
   it "設定値:formatだけを取得する事ができる" do
     ARGV << 'hoge'
     command = Eventaskbot::Command.new
-    command.merge
+    command.parse
     expect(command.get(:format)).to eq("json")
   end
 
   it "存在しない設定値を設定した場合は例外が発生する" do
     ARGV << 'hoge'
     command = Eventaskbot::Command.new
-    command.merge
+    command.parse
     expect{ command.get(:hoge) }.to raise_error
   end
 
