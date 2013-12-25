@@ -1,7 +1,14 @@
+require 'eventaskbot/configurable/merge'
+
+#
+# 設定を扱うモジュール
+#
 module Eventaskbot
   module Configurable
 
-    attr_accessor :plugin_dir, :storage, :service
+    include Merge
+
+    attr_accessor :plugin_dir, :storage, :service, :response
 
     #
     # 設定をマージする
@@ -14,16 +21,15 @@ module Eventaskbot
     # 設定を取得する
     #
     def options
-      res = []
       value = {}
 
       instance_variables.each do |var|
         k = var.to_s.tr('@','')
         value[k.to_sym] = instance_variable_get(var)
-        res.push(value)
+        value = value.merge(value)
       end
 
-      res
+      value
     end
 
     #
