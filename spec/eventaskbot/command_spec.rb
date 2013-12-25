@@ -24,81 +24,66 @@ describe Eventaskbot::Command, "Eventaskbot Command Module" do
     expect(command).to match /^eventaskbot argument/
   end
 
-  it "フォーマットオプションで許容しないフォーマットの場合は例外が発生" do
-    ARGV << '--format=fuga'
+  it "フォーマットオプションを設定した場合に値が反映されている事" do
+    argv = ['init', '--format=hash']
     command = Eventaskbot::Command.new
-    expect{ command.parse }.to raise_error
-  end
+    command.parse(argv)
+    expect(command.opts[:format]).to eq('hash')
 
-  it "フォーマットオプションがjsonの場合は例外が発生しない" do
-    ARGV << 'hoge'
-    ARGV << '--format=json'
-    command = Eventaskbot::Command.new
-    expect{ command.parse }.not_to raise_error
-  end
-
-  it "フォーマットオプションがtextの場合は例外が発生しない" do
-    ARGV << 'hoge'
-    ARGV << '--format=text'
-    command = Eventaskbot::Command.new
-    expect{ command.parse }.not_to raise_error
-  end
-
-  it "フォーマットオプションがhashの場合は例外が発生しない" do
-    ARGV << 'hoge'
-    ARGV << '--format=hash'
-    command = Eventaskbot::Command.new
-    expect{ command.parse }.not_to raise_error
   end
 
   it "第一引数がない場合は例外が発生する" do
-    ARGV << '--format=hash'
+    argv = ['--format=hash']
     command = Eventaskbot::Command.new
-    expect{ command.parse }.to raise_error
+    expect{ command.parse(argv) }.to raise_error
   end
 
   it "hashフォーマットを指定した場合はoptsメンバー変数にhashが入る" do
-    ARGV << 'hoge'
-    ARGV << '--format=hash'
+    argv = ['hoge', '--format=hash']
     command = Eventaskbot::Command.new
-    command.parse
+    command.parse(argv)
     expect(command.opts[:format]).to eq("hash")
   end
 
-  it "jsonフォーマットを指定した場合はoptsメンバー変数にjsonが入る" do
-    ARGV << 'hoge'
-    ARGV << '--format=json'
-    command = Eventaskbot::Command.new
-    command.parse
-    expect(command.opts[:format]).to eq("json")
-  end
-
-  it "textフォーマットを指定した場合はoptsメンバー変数にtextが入る" do
-    ARGV << 'hoge'
-    ARGV << '--format=text'
-    command = Eventaskbot::Command.new
-    command.parse
-    expect(command.opts[:format]).to eq("text")
-  end
-
   it "フォーマットを指定しない場合のデフォルトフォーマットはjson" do
-    ARGV << 'hoge'
+    argv = ['hoge']
     command = Eventaskbot::Command.new
-    command.parse
+    command.parse(argv)
     expect(command.opts[:format]).to eq("json")
   end
 
   it "設定値:formatだけを取得する事ができる" do
-    ARGV << 'hoge'
+    argv = ['hoge']
     command = Eventaskbot::Command.new
-    command.parse
+    command.parse(argv)
     expect(command.get(:format)).to eq("json")
   end
 
-  it "存在しない設定値を設定した場合は例外が発生する" do
-    ARGV << 'hoge'
+  it "第２引数がない場合のデフォルトの[:api][:params]は空のHash" do
+    argv = ['hoge']
     command = Eventaskbot::Command.new
-    command.parse
+    command.parse(argv)
+    expect(command.opts[:api][:params]).to eq({})
+  end
+
+  it "第２引数の指定がHashではない場合は例外が発生" do
+    argv = ['hoge', "fuga"]
+    command = Eventaskbot::Command.new
+    expect{ command.parse(argv) }.to raise_error
+  end
+
+  it "第２引数の指定がHashの場合はオプションを取得できる" do
+    assert = {:hoge => :fuga}
+    argv = ['hoge', "#{assert}"]
+    command = Eventaskbot::Command.new
+    command.parse(argv)
+    expect(command.opts[:api][:params]).to eq(assert)
+  end
+
+  it "存在しない設定値を設定した場合は例外が発生する" do
+    argv = ['hoge']
+    command = Eventaskbot::Command.new
+    command.parse(argv)
     expect{ command.get(:hoge) }.to raise_error
   end
 

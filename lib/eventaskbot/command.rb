@@ -18,7 +18,9 @@ module Eventaskbot
     #
     # コマンドラインオプションを設定にマージする
     #
-    def parse
+    def parse(argv = [])
+      argv = ARGV if argv.size == 0
+
       @opts = {}
 
       OptionParser.new do |opt|
@@ -26,30 +28,20 @@ module Eventaskbot
         opt.banner= 'eventaskbot argument [options]'
 
         opt.on('-f', '--format=FORMAT', 'eventaskbot response format') do |v|
-          res = nil
-
-          ["json", "text", "hash"].each do |format|
-            if v == format
-              res = format
-              break
-            end
-          end
-
-          raise "Invalid Format #{v}" if res.nil?
           @opts[:format] = v
         end
 
         #formatの指定がない場合のデフォルトは.jsonになる
         @opts[:format] = 'json' unless @opts.key?(:format)
 
-        opt.permute!(ARGV)
+        argv = opt.parse(argv)
 
-        raise "Command Line Error. Please specify argment1." if ARGV.length == 0
+        raise "Command Line Error. Please specify argment1." if argv.size <= 0
         @opts[:api] = {}
-        @opts[:api][:name] = ARGV.shift
+        @opts[:api][:name] = argv[0]
 
         @opts[:api][:params] = {}
-        @opts[:api][:params] = eval ARGV.shift if ARGV.length >= 1
+        @opts[:api][:params] = eval argv[1] if argv.size > 1
 
       end.getopts
     end
