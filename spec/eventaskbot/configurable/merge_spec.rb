@@ -15,10 +15,9 @@ describe Eventaskbot::Configurable::Merge, "Eventaskbot Configurable::Merge Clas
   end
 
   it "コマンドラインのオプションをマージできるか？" do
-    ARGV << 'init'
-    ARGV << '--format=json'
+    argv = ['init', '--format=json']
     command = Eventaskbot::Command.new
-    command.parse
+    command.parse(argv)
     Eventaskbot::Configurable::Merge.command_merge(command.opts)
     expect(Eventaskbot.options[:api][:name]).to eq("init")
     expect(Eventaskbot.options[:response][:format]).to eq("json")
