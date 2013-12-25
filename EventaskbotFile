@@ -1,0 +1,3 @@
+Eventaskbot::configure do |c|
+  c.plugin_dir = "plugins/"
+end
