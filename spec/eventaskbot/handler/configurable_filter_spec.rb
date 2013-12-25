@@ -13,25 +13,6 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
     expect(Eventaskbot::Handler::ConfigurableFilter.class).to eq(Module)
   end
 
-  it "filterメソッド実行時にoptionsの値:apiがnilの場合は例外が発生する" do
-    expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to raise_error
-  end
-
-  it "filterメソッド実行時にoptionsの値:api[:name]がnilの場合は例外が発生する" do
-    Eventaskbot.configure do |c|
-      c.api = {:name => nil}
-    end
-    expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to raise_error
-  end
-
-  it "filterメソッド実行時に存在しないAPi名の場合は例外が発生する" do
-    Eventaskbot.configure do |c|
-      c.api = {:name => "hoge"}
-    end
-
-    expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to raise_error
-  end
-
   it "filterメソッド実行時にoptionsの値:responseがnilの場合は例外が発生する" do
     Eventaskbot.configure do |c|
       c.api = {:name => "init"}
@@ -65,30 +46,6 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
     end
 
     expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to_not raise_error
-  end
-
-  it "init,get-oauth-tokenのAPI種別はetcである" do
-    ["init", "get-oauth-token"].each do |v|
-      Eventaskbot.configure do |c|
-        c.api = {:name => v}
-        c.response = {:format => "json"}
-      end
-
-      expect(Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options)[:api][:type]).to eq(:etc)
-      Eventaskbot.reset
-    end
-  end
-
-  it "terget-set,has-ticketのAPI種別はcollectorである" do
-    ["terget-set", "has-ticket"].each do |v|
-      Eventaskbot.configure do |c|
-        c.api = {:name => v}
-        c.response = {:format => "json"}
-      end
-
-      expect(Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options)[:api][:type]).to eq(:collector)
-      Eventaskbot.reset
-    end
   end
 
 end
