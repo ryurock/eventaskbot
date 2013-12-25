@@ -45,6 +45,8 @@ module Eventaskbot
       # @return [Boolean] true 存在する | false 存在しない
       #
       def self.api_exist?(name)
+        name = name.to_s if name.class == Symbol
+
         res = false
 
         get_api_name.each do |v|
