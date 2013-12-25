@@ -66,4 +66,29 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
 
     expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to_not raise_error
   end
+
+  it "init,get-oauth-tokenのAPI種別はetcである" do
+    ["init", "get-oauth-token"].each do |v|
+      Eventaskbot.configure do |c|
+        c.api = {:name => v}
+        c.response = {:format => "json"}
+      end
+
+      expect(Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options)[:api][:type]).to eq(:etc)
+      Eventaskbot.reset
+    end
+  end
+
+  it "terget-set,has-ticketのAPI種別はcollectorである" do
+    ["terget-set", "has-ticket"].each do |v|
+      Eventaskbot.configure do |c|
+        c.api = {:name => v}
+        c.response = {:format => "json"}
+      end
+
+      expect(Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options)[:api][:type]).to eq(:collector)
+      Eventaskbot.reset
+    end
+  end
+
 end

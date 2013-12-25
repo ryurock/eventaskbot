@@ -7,18 +7,44 @@ module Eventaskbot
 
       #
       # フィルター
+      # @param options[Hash] 設定された値
+      # @return [Hash] filterして追加、削除した値の設定値
       #
       def self.filter(options)
-        res = options
-        raise "options :api not found."                                                  unless options.key?(:api)
-        raise "options :api is NilClass."                                                if     options[:api].nil?
-        raise "options :api[:name] is NilClass."                                         if     options[:api][:name].nil?
-        raise "options api name #{options[:api][:name]} not found."                      unless api_exist?(options[:api][:name])
-        raise "options response not found."                                              unless options.key?(:response)
-        raise "options :response is NilClass."                                           if     options[:response].nil?
-        raise "options :response[:format] is NilClass."                                  if     options[:response][:format].nil?
-        raise "options responsep format name #{options[:response][:format]} not found."  unless format_exist?(options[:response][:format])
-        res
+
+        raise "options :api not found."       unless options.key?(:api)
+        raise "options response not found."   unless options.key?(:response)
+
+        #optiosnに追加したい値をinjectする
+        options = options.inject({}) do |a, (k,v)|
+           a[k] = v
+
+           if k == :api
+
+             raise "options :api is NilClass."           if     v.nil?
+             raise "options :api[:name] is NilClass."    if     v[:name].nil?
+
+             a[k][:name] = v[:name].to_s
+             raise "options api name #{v[:name]} not found."  unless api_exist?(a[k][:name])
+
+             a[k][:type] = :collector unless get_collectors.index(a[k][:name]).nil?
+             a[k][:type] = :etc       unless get_etc.index(a[k][:name]).nil?
+
+           end
+
+           if k == :response
+
+             raise "options :response is NilClass."             if     v.nil?
+             raise "options :response[:format] is NilClass."    if     v[:format].nil?
+
+             a[k][:format] = v[:format].to_sym
+             raise "options responsep format name #{v[:format]} not found."  unless format_exist?(a[k][:format])
+           end
+
+           a
+        end
+
+        options
       end
 
       #
@@ -49,7 +75,14 @@ module Eventaskbot
 
         res = false
 
-        get_api_name.each do |v|
+        get_collectors.each do |v|
+          if name == v
+            res = true
+            break
+          end
+        end
+
+        get_etc.each do |v|
           if name == v
             res = true
             break
@@ -64,15 +97,23 @@ module Eventaskbot
       # @return [Array] API名の一覧
       #
       def self.get_format_types
-        ["json", "text", "hash"]
+        [:json, :text, :hash]
       end
 
       #
-      # API名を返す
-      # @return [Array] API名の一覧
+      # Collector APi一覧を返す
+      # @return [Array] Collector API名の一覧
       #
-      def self.get_api_name
-        ["init", "get-yam-token", "terget-set", "has-ticket"]
+      def self.get_collectors
+        ["terget-set", "has-ticket"]
+      end
+
+      #
+      # Etc APi一覧を返す
+      # @return [Array] Etc API名の一覧
+      #
+      def self.get_etc
+        ["init", "get-oauth-token"]
       end
     end
   end
