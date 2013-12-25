@@ -1,3 +1,5 @@
+#! /usr/bin/env ruby
+
 # Etc API setting
 Eventaskbot::Api::Etc.configure do |c|
 # Etc API add setting
