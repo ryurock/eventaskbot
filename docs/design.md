@@ -2,13 +2,13 @@
 
 ## 概要
 
-1. Eventaskbot::Commandでコマンドラインオプションを取得
+1. ~~Eventaskbot::Commandでコマンドラインオプションを取得~~ ※完了
 1. Eventaskbot::Handlerでハンドリング
 
 ### 3. Eventaskbot::Handlerでハンドリング
 
-1. Eventaskbot::Configurable::Merge.eventaskbotfile_mergeから設定ファイルEventaskbotFileの設定内容を設定にマージ
-1. Eventaskbot::Configurable::Merge.command_mergeからコマンドラインオプションの設定内容を設定にマージ(コマンドラインオプションのほうが設定としては優先)
+1. ~~Eventaskbot::Configurable::Merge.config_fileで設定ファイルEventaskbotFileの設定内容を設定にマージ~~ ※完了
+1. ~~Eventaskbot::Configurable::Merge.command_mergeからコマンドラインオプションの設定内容を設定にマージ(コマンドラインオプションのほうが設定としては優先)~~ ※完了
 
 ### 3.3. Eventaskbot::Configurableの設定内容をフィルター
 
@@ -206,3 +206,4 @@
  
 * プラグインがディレクトリに存在するか検索する
  * def self.find_dir
+
