@@ -18,7 +18,7 @@ module Eventaskbot
     def run(opts = {:command => nil})
       #設定ファイルを設定にマージする
       Configurable::Merge.config_file(Eventaskbot.options)
-
+      #コマンドラインオプションの設定を設定にマージする
       Configurable::Merge.command(opts[:command])
 
       #設定をフィルタリング
