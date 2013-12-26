@@ -1,3 +1,5 @@
+require 'eventaskbot'
+require 'eventaskbot/configurable'
 require 'eventaskbot/api/etc'
 require 'eventaskbot/api/collector'
 
@@ -28,12 +30,29 @@ module Eventaskbot
 
         #
         # EventaskbotFileをマージする
+        # @param opts[Hash] 設定値のHash
+        # @return [Hash] マージ後の設定値
         #
-        def config_file(path)
-          raise "#{path} File is not Found" unless FileTest.exist? path
-          load path
+        def config_file(opts)
+          cur_path = "#{Dir.pwd}/EventaskbotFile"
+          unless opts.key?(:config_file)
+            load cur_path
+            return Eventaskbot.options
+          end
 
-          self
+          if opts[:config_file].nil?
+            load cur_path
+            return Eventaskbot.options
+          end
+
+          unless opts[:config_file].key?(:path)
+            load cur_path
+            return Eventaskbot.options
+          end
+
+          load opts[:config_file][:path]
+
+          Eventaskbot.options
         end
       end
     end
