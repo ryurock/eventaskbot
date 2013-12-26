@@ -18,7 +18,8 @@ describe Eventaskbot::Configurable::Merge, "Eventaskbot Configurable::Merge Clas
     argv = ['init', '--format=json']
     command = Eventaskbot::Command.new
     command.parse(argv)
-    Eventaskbot::Configurable::Merge.command_merge(command.opts)
+    Eventaskbot::Configurable::Merge.command(command)
+
     expect(Eventaskbot.options[:api][:name]).to eq("init")
     expect(Eventaskbot.options[:response][:format]).to eq("json")
   end
@@ -26,11 +27,11 @@ describe Eventaskbot::Configurable::Merge, "Eventaskbot Configurable::Merge Clas
   it "設定ファイルが存在しない場合は例外が発生する" do
     #path = File.expand_path(__FILE__ + '/../../../../EventaskbotFile')
     path = File.expand_path(__FILE__ + '/../EventaskbotFile')
-    expect{ Eventaskbot::Configurable::Merge.eventaskbotfile_merge(path) }.to raise_error
+    expect{ Eventaskbot::Configurable::Merge.config_file(path) }.to raise_error
   end
 
   it "設定ファイルが存在する場合は例外が発生しない" do
     path = File.expand_path(__FILE__ + '/../../../../EventaskbotFile')
-    expect{ Eventaskbot::Configurable::Merge.eventaskbotfile_merge(path) }.not_to raise_error
+    expect{ Eventaskbot::Configurable::Merge.config_file(path) }.not_to raise_error
   end
 end
