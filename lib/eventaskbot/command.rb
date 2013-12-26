@@ -31,6 +31,10 @@ module Eventaskbot
           @opts[:format] = v
         end
 
+        opt.on('-c', '--config=CONF_FILE', 'eventaskbot configure File') do |v|
+          @opts[:conf_file] = v
+        end
+
         #formatの指定がない場合のデフォルトは.jsonになる
         @opts[:format] = 'json' unless @opts.key?(:format)
 

@@ -45,6 +45,14 @@ describe Eventaskbot::Command, "Eventaskbot Command Module" do
     expect(command.opts[:format]).to eq("hash")
   end
 
+  it "--configオプションを指定した場合は設定が:conf_fileにある" do
+    assert = "~/EventaskbotFile"
+    argv = ['hoge', "--config=#{assert}"]
+    command = Eventaskbot::Command.new
+    command.parse(argv)
+    expect(command.opts[:conf_file]).to eq(assert)
+  end
+
   it "フォーマットを指定しない場合のデフォルトフォーマットはjson" do
     argv = ['hoge']
     command = Eventaskbot::Command.new
