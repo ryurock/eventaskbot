@@ -13,12 +13,33 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     expect(Eventaskbot::Handler.class).to eq(Module)
   end
 
-  it "runを" do
+  it "commandオプションを指定しない場合は設定が変更されない" do
     Eventaskbot.configure do |c|
       c.api = {:name => :init}
       c.response = {:format => "json"}
     end
 
     Eventaskbot.run
+    expect(Eventaskbot.options[:api][:name]).to eq("init")
+  end
+
+  it "commandオプションを指定した場合は値が変更される" do
+    assert = {
+      :response    => {:format => :json},
+      :api         => {:name=>"get-oauth-token", :params => {}, :type => :etc},
+      :plugin_dir  => nil,
+      :config_file => nil
+    }
+
+    Eventaskbot.configure do |c|
+      c.api = {:name => :init}
+      c.response = {:format => "json"}
+    end
+
+    argv = ["get-oauth-token"]
+    command = Eventaskbot::Command.new
+    command.parse(argv)
+    Eventaskbot.run({ :command => command})
+    expect(Eventaskbot.options).to eq(assert)
   end
 end

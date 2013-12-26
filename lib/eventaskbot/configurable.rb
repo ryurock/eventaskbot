@@ -8,7 +8,7 @@ module Eventaskbot
 
     include Merge
 
-    attr_accessor :plugin_dir, :storage, :service, :response, :api
+    attr_accessor :plugin_dir, :storage, :service, :response, :api, :config_file
 
     #
     # 設定をマージする

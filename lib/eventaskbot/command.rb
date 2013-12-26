@@ -33,6 +33,13 @@ module Eventaskbot
 
         opt.on('-c', '--config=CONF_FILE', 'eventaskbot configure File') do |v|
           @opts[:conf_file] = v
+
+          #設定ファイルのpathは先に設定に追加しておきたいので追加
+          Eventaskbot.configure do |c|
+            c.config_file = {} if c.config_file.nil?
+            c.config_file[:path] = v
+          end
+
         end
 
         #formatの指定がない場合のデフォルトは.jsonになる
