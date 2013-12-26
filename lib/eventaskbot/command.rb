@@ -5,7 +5,20 @@ require 'optparse'
 #
 module Eventaskbot
   class Command
-    attr_accessor :opts
+    attr_accessor :opts, :argv
+
+    #
+    # イニシャライズ
+    #
+    # @param argv[Array] コマンドライン引数
+    #
+    def initialize(argv = [])
+      if argv.size == 0
+        @argv = ARGV
+      else
+        @argv = argv
+      end
+    end
 
     #
     # コマンドラインオプションを取得する
@@ -18,9 +31,7 @@ module Eventaskbot
     #
     # コマンドラインオプションを設定にマージする
     #
-    def parse(argv = [])
-      argv = ARGV if argv.size == 0
-
+    def parse
       @opts = {}
 
       OptionParser.new do |opt|
@@ -45,7 +56,7 @@ module Eventaskbot
         #formatの指定がない場合のデフォルトは.jsonになる
         @opts[:format] = 'json' unless @opts.key?(:format)
 
-        argv = opt.parse(argv)
+        argv = opt.parse(@argv)
 
         raise "Command Line Error. Please specify argment1." if argv.size <= 0
         @opts[:api] = {}
