@@ -27,7 +27,7 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     assert = {
       :response    => {:format => :json},
       :api         => {:name=>"get-oauth-token", :params => {}, :type => :etc},
-      :plugin_dir  => nil,
+      :plugin_dir  => "plugins/",
       :config_file => nil
     }
 
@@ -37,8 +37,8 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     end
 
     argv = ["get-oauth-token"]
-    command = Eventaskbot::Command.new
-    command.parse(argv)
+    command = Eventaskbot::Command.new(argv)
+    command.parse
     Eventaskbot.run({ :command => command})
     expect(Eventaskbot.options).to eq(assert)
   end
