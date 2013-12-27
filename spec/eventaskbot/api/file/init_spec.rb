@@ -3,14 +3,14 @@
 require File.expand_path(File.join('../../../', 'spec_helper'), File.dirname(__FILE__))
 
 require 'eventaskbot'
-require 'eventaskbot/api/etc/init'
+require 'eventaskbot/api/file/init'
 
-describe Eventaskbot::Api::Etc::Init, "Eventaskbot Etc Init API Class" do
+describe Eventaskbot::Api::File::Init, "Eventaskbot File Init API Class" do
   before(:each) do
   end
 
   it "クラスである事の確認" do
-    expect(Eventaskbot::Api::Etc::Init.class).to eq(Class)
+    expect(Eventaskbot::Api::File::Init.class).to eq(Class)
   end
 
 end

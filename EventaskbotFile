@@ -1,10 +1,17 @@
 #! /usr/bin/env ruby
 
-# Etc API setting
-Eventaskbot::Api::Etc.configure do |c|
-# Etc API add setting
+# Auth API setting
+Eventaskbot::Api::Auth.configure do |c|
+# Auth API add setting
 # example
 # c.get_oauth_token = {:service => :yammer}
+end
+
+# File API setting
+Eventaskbot::Api::File.configure do |c|
+# File API add setting
+# example
+# c.init = {:service => :yammer}
 end
 
 # Collector API setting

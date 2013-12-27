@@ -1,6 +1,7 @@
 require 'eventaskbot'
 require 'eventaskbot/configurable'
-require 'eventaskbot/api/etc'
+require 'eventaskbot/api/file'
+require 'eventaskbot/api/auth'
 require 'eventaskbot/api/collector'
 
 #

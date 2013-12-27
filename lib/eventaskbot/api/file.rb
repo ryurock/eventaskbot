@@ -1,12 +1,12 @@
 #
-# Collector API Base
+# File API Base
 #
 module Eventaskbot
   module Api
-    module Etc
+    module File
       class << self
 
-        attr_accessor :init, :get_oauth_token
+        attr_accessor :init
 
         #
         # 設定をマージする

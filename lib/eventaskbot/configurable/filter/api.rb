@@ -18,8 +18,9 @@ module Eventaskbot
           opts[:name] = opts[:name].to_s
           raise "options api name #{opts[:name]} not found."  unless api_exist?(opts[:name])
 
-          opts[:type]  = :collector unless get_collectors.index(opts[:name]).nil?
-          opts[:type]  = :etc       unless get_etc.index(opts[:name]).nil?
+          opts[:type]  = :collector unless collector_api_list.index(opts[:name]).nil?
+          opts[:type]  = :file      unless file_api_list.index(opts[:name]).nil?
+          opts[:type]  = :auth      unless auth_api_list.index(opts[:name]).nil?
           opts[:klass] = api_load(opts[:name], opts[:type])
 
           opts
@@ -47,39 +48,34 @@ module Eventaskbot
         # @return [Boolean] true 存在する | false 存在しない
         #
         def self.api_exist?(name)
-          res = false
-
-          get_collectors.each do |v|
-            if name == v
-              res = true
-              break
-            end
-          end
-
-          get_etc.each do |v|
-            if name == v
-              res = true
-              break
-            end
-          end
-
-          res
+          collector_api_list.each{ |v| return true if name == v }
+          auth_api_list.each{      |v| return true if name == v }
+          file_api_list.each{      |v| return true if name == v }
+          false
         end
 
         #
         # Collector APi一覧を返す
         # @return [Array] Collector API名の一覧
         #
-        def self.get_collectors
+        def self.collector_api_list
           ["terget-set", "has-ticket"]
         end
 
         #
-        # Etc APi一覧を返す
-        # @return [Array] Etc API名の一覧
+        # File APi一覧を返す
+        # @return [Array] File API名の一覧
         #
-        def self.get_etc
-          ["init", "get-oauth-token"]
+        def self.file_api_list
+          ["init"]
+        end
+
+        #
+        # Auth APi一覧を返す
+        # @return [Array] Auth API名の一覧
+        #
+        def self.auth_api_list
+          ["get-oauth-token"]
         end
       end
     end

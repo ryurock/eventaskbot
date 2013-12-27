@@ -3,33 +3,33 @@
 require File.expand_path(File.join('../../', 'spec_helper'), File.dirname(__FILE__))
 
 require 'eventaskbot'
-require 'eventaskbot/api/etc'
+require 'eventaskbot/api/file'
 
-describe Eventaskbot::Api::Etc, "Eventaskbot Etc API Module" do
+describe Eventaskbot::Api::File, "Eventaskbot File API Module" do
   before(:each) do
-    Eventaskbot::Api::Etc.reset
+    Eventaskbot::Api::File.reset
     @assert = {:service => [:yammer, :redmine]}
   end
 
   it "モジュールである事の確認" do
-    expect(Eventaskbot::Api::Etc.class).to eq(Module)
+    expect(Eventaskbot::Api::File.class).to eq(Module)
   end
 
   it "initの設定を与えても例外にならないこと" do
     expect{
-      Eventaskbot::Api::Etc.configure do |c|
+      Eventaskbot::Api::File.configure do |c|
         c.init = @assert
       end
     }.to_not raise_error
   end
 
-  it "initの設定を与えた値が取得できること" do
+  it "get_oauth_tokenの設定を与えた値が取得できること" do
 
-    Eventaskbot::Api::Etc.configure do |c|
+    Eventaskbot::Api::File.configure do |c|
       c.init = @assert
     end
 
-    expect(Eventaskbot::Api::Etc.options[:init]).to eq(@assert)
+    expect(Eventaskbot::Api::File.options[:init]).to eq(@assert)
   end
 
 

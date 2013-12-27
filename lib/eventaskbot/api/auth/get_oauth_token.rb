@@ -1,9 +1,9 @@
 #
-# Etc Init  API
+# Auth GetOauthToken  API
 #
 module Eventaskbot
   module Api
-    module Etc
+    module Auth
       class GetOauthToken
         def execute
         end

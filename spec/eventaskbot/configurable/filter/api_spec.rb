@@ -29,32 +29,52 @@ describe Eventaskbot::Configurable::Filter::Api, "Eventaskbot configurable filte
     expect{ Eventaskbot::Configurable::Filter::Api.filter(opts) }.to raise_error
   end
 
-  it "init,get-oauth-tokenのAPI種別は:etcである" do
+  it "initのAPI種別は:fileである" do
 
-    ["init", "get-oauth-token"].each do |v|
+    ["init"].each do |v|
       opts = {:name => v}
       res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-      expect(res[:type]).to eq(:etc)
+      expect(res[:type]).to eq(:file)
     end
   end
 
-  it "init,get-oauth-tokenのAPI名がレスポンスに入ってる事" do
+  it "initのAPI名がレスポンスに入ってる事" do
 
-    ["init", "get-oauth-token"].each do |v|
+    ["init"].each do |v|
       opts = {:name => v}
       res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
       expect(res[:name]).to eq(v)
     end
   end
 
-  it "init,get-oauth-tokenのAPIインスタンスがレスポンスに入ってる事" do
+  it "initのAPIインスタンスがレスポンスに入ってる事" do
     opts = {:name => 'init'}
     res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-    expect(res[:klass].class).to eq(Eventaskbot::Api::Etc::Init)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::File::Init)
+  end
 
+  it "get-oauth-tokenのAPI種別は:authである" do
+
+    ["get-oauth-token"].each do |v|
+      opts = {:name => v}
+      res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
+      expect(res[:type]).to eq(:auth)
+    end
+  end
+
+  it "get-oauth-tokenのAPI名がレスポンスに入ってる事" do
+
+    ["get-oauth-token"].each do |v|
+      opts = {:name => v}
+      res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
+      expect(res[:name]).to eq(v)
+    end
+  end
+
+  it "get-oauth-tokenのAPIインスタンスがレスポンスに入ってる事" do
     opts = {:name => 'get-oauth-token'}
     res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-    expect(res[:klass].class).to eq(Eventaskbot::Api::Etc::GetOauthToken)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::Auth::GetOauthToken)
   end
 
   it "terget-set,has-ticketのAPI種別は:collectorである" do
