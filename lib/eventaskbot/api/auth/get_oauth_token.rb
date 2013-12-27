@@ -5,7 +5,7 @@ module Eventaskbot
   module Api
     module Auth
       class GetOauthToken
-        def execute
+        def execute(params)
         end
       end
     end
