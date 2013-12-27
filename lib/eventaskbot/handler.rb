@@ -30,7 +30,7 @@ module Eventaskbot
 
       #設定をフィルタリング
       conf = Configurable::Filter.filter(Eventaskbot.options)
-      conf[:api][:klass].execute
+      conf[:api][:klass].execute conf[:api][:params]
     end
   end
 end

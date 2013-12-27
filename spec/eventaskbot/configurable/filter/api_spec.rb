@@ -29,6 +29,15 @@ describe Eventaskbot::Configurable::Filter::Api, "Eventaskbot configurable filte
     expect{ Eventaskbot::Configurable::Filter::Api.filter(opts) }.to raise_error
   end
 
+  it "APIのパラメーターが存在しない場合の戻り値は空のhashである" do
+
+    ["init"].each do |v|
+      opts = {:name => v}
+      res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
+      expect(res[:params]).to eq({})
+    end
+  end
+
   it "initのAPI種別は:fileである" do
 
     ["init"].each do |v|
