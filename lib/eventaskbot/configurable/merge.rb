@@ -13,11 +13,10 @@ module Eventaskbot
         #
         # コマンドラインオプションを設定にマージする
         # @params [Eventaskbot::Command] コマンドラインオプションクラス
-        # @return Eventaskbot
+        # @return [Hash] 追加した設定
         #
         def command(obj)
-          return if obj.nil?
-
+          return Eventaskbot.options if obj.nil?
           Eventaskbot.configure do |c|
             c.response          = {}                   if c.response.nil?
             c.response[:format] = obj.opts[:format]    if obj.opts.key? :format
@@ -26,6 +25,8 @@ module Eventaskbot
             c.api[:name]        = obj.opts[:api][:name]      if obj.opts.key?(:api) && obj.opts[:api].key?(:name)
             c.api[:params]      = obj.opts[:api][:params]    if obj.opts.key?(:api) && obj.opts[:api].key?(:params)
           end
+
+          Eventaskbot.options
         end
 
         #
@@ -35,22 +36,19 @@ module Eventaskbot
         #
         def config_file(opts)
           cur_path = "#{Dir.pwd}/EventaskbotFile"
-          unless opts.key?(:config_file)
-            load cur_path
-            return Eventaskbot.options
+
+          if opts.key?(:config_file) && opts[:config_file].nil? == false && opts[:config_file].key?(:path)
+            path = opts[:config_file][:path]
+          else
+            path = cur_path
           end
 
-          if opts[:config_file].nil?
-            load cur_path
-            return Eventaskbot.options
-          end
+          load path
 
-          unless opts[:config_file].key?(:path)
-            load cur_path
-            return Eventaskbot.options
+          Eventaskbot.configure do |c|
+            c.config_file          = {}                   if c.config_file.nil?
+            c.config_file[:path]   = path
           end
-
-          load opts[:config_file][:path]
 
           Eventaskbot.options
         end

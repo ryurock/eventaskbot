@@ -16,13 +16,20 @@ module Eventaskbot
     # 要求の実行
     #
     def run(opts = {:command => nil})
+      #コマンドラインオプションの設定を設定にマージする
+      comm =  Configurable::Merge.command(opts[:command])
+      #API名が存在しない場合はエラーになる
+      raise "API setting not found." if     comm[:api].nil?
+      raise "API name unkwon."       unless comm[:api].key?(:name)
+
       #設定ファイルを設定にマージする
       Configurable::Merge.config_file(Eventaskbot.options)
       #コマンドラインオプションの設定を設定にマージする
       Configurable::Merge.command(opts[:command])
 
       #設定をフィルタリング
-      opts = Configurable::Filter.filter(Eventaskbot.options)
+      conf = Configurable::Filter.filter(Eventaskbot.options)
+      conf[:api][:klass].execute
     end
   end
 end

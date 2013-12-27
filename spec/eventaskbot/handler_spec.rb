@@ -7,6 +7,7 @@ require 'eventaskbot/handler'
 
 describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
   before(:each) do
+    Eventaskbot.reset
   end
 
   it "モジュールである事の確認" do
@@ -35,5 +36,16 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     command.parse
     Eventaskbot.run({ :command => command})
     expect(Eventaskbot.options[:api][:name]).to eq(assert)
+  end
+
+  it "設定ファイルがロードされている事を確認する" do
+    assert = 'get-oauth-token'
+    Eventaskbot.configure do |c|
+      c.api = {:name => :init}
+      c.response = {:format => "json"}
+    end
+
+    Eventaskbot.run
+    expect(Eventaskbot.options[:config_file].key?(:path)).to eq(true)
   end
 end

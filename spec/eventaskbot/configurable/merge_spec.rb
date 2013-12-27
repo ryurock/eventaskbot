@@ -8,6 +8,7 @@ require 'eventaskbot/command'
 
 describe Eventaskbot::Configurable::Merge, "Eventaskbot Configurable::Merge Class" do
   before(:each) do
+    Eventaskbot.reset
   end
 
   it "モジュールである事の確認" do
@@ -44,5 +45,15 @@ describe Eventaskbot::Configurable::Merge, "Eventaskbot Configurable::Merge Clas
     path = File.expand_path(__FILE__ + '/../../../../EventaskbotFile')
     opts = { :config_file => { :path => path } }
     expect{ Eventaskbot::Configurable::Merge.config_file(opts) }.not_to raise_error
+  end
+
+  it "commandの戻り値はHash" do
+    path = File.expand_path(__FILE__ + '/../../../../EventaskbotFile')
+    opts = { :config_file => { :path => path } }
+    expect(Eventaskbot::Configurable::Merge.config_file(opts).class).to eq(Hash)
+  end
+
+  it "commandの引数がnilの場合でもエラーにならないh" do
+    expect{ Eventaskbot::Configurable::Merge.command(nil) }.not_to raise_error
   end
 end
