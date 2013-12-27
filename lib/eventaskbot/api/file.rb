@@ -43,9 +43,7 @@ module Eventaskbot
         # 設定の初期化を行う
         #
         def reset
-          instance_variables.each do |var|
-            instance_variable_set(var, nil)
-          end
+          instance_variables.each{ |var| instance_variable_set(var, nil) }
         end
 
       end

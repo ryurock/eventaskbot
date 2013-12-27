@@ -7,6 +7,7 @@ require 'eventaskbot/api/file/init'
 
 describe Eventaskbot::Api::File::Init, "Eventaskbot File Init API Class" do
   before(:each) do
+    Eventaskbot::Api::File.reset
   end
 
   it "クラスである事の確認" do

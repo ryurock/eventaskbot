@@ -1,12 +1,18 @@
+require 'eventaskbot/api/file'
+
 #
-# File Init  API
+# File/Init API
 #
 module Eventaskbot
   module Api
     module File
       class Init
+
+        include File
+
         def execute
-          #設定ファイルを作成する
+          parent_opts = File.option :init
+          parent_opts
         end
       end
     end

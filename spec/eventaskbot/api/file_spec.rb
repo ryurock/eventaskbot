@@ -45,4 +45,13 @@ describe Eventaskbot::Api::File, "Eventaskbot File API Module" do
     end
     expect(Eventaskbot::Api::File.option(:init)).to eq(@assert)
   end
+
+  it "resetメソッドで設定した値を消去できる事" do
+    Eventaskbot::Api::File.configure do |c|
+      c.init = @assert
+    end
+
+    Eventaskbot::Api::File.reset
+    expect(Eventaskbot::Api::File.options[:init]).to eq(nil)
+  end
 end
