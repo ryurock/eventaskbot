@@ -38,14 +38,24 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     expect(Eventaskbot.options[:api][:name]).to eq(assert)
   end
 
-  it "設定ファイルがロードされている事を確認する" do
-    assert = 'get-oauth-token'
+  it "initは設定ファイルを作成するのでconfig_fileの設定が入ってこない" do
+    assert = 'init'
     Eventaskbot.configure do |c|
       c.api = {:name => :init}
       c.response = {:format => "json"}
     end
 
     Eventaskbot.run
-    expect(Eventaskbot.options[:config_file].key?(:path)).to eq(true)
+    expect(Eventaskbot.options[:config_file].nil?).to eq(true)
+  end
+
+  it "init以外はconfig_fileの設定が入ってくる" do
+    Eventaskbot.configure do |c|
+      c.api = {:name => 'get-oauth-token'}
+      c.response = {:format => "json"}
+    end
+
+    Eventaskbot.run
+    expect(Eventaskbot.options[:config_file][:path].nil?).to eq(false)
   end
 end

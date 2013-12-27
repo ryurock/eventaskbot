@@ -92,15 +92,23 @@
 
 ### Eventaskbot::Api
 
-## API Etc モジュール
+## API File モジュール
 
-### Eventaskbot::Api::Etc
+### Eventaskbot::Api::File
 
-### API Etc init クラス
+### API File init クラス
 
 -----
 
-#### Eventaskbot::Api::Etc::Init
+## API Auth モジュール
+
+### Eventaskbot::Api::Auth
+
+### API Auth get-oauth-token クラス
+
+-----
+
+#### Eventaskbot::Api::Auth::GetOauthToken
 
 ## API collector モジュール
 

@@ -22,8 +22,9 @@ module Eventaskbot
       raise "API setting not found." if     comm[:api].nil?
       raise "API name unkwon."       unless comm[:api].key?(:name)
 
-      #設定ファイルを設定にマージする
-      Configurable::Merge.config_file(Eventaskbot.options)
+      #initだけは設定ファイルを作成するのでマージは行わない
+      Configurable::Merge.config_file(Eventaskbot.options ) unless comm[:api][:name].to_s == "init"
+
       #コマンドラインオプションの設定を設定にマージする
       Configurable::Merge.command(opts[:command])
 
