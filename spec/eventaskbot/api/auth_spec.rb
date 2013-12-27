@@ -24,12 +24,17 @@ describe Eventaskbot::Api::Auth, "Eventaskbot Auth API Module" do
   end
 
   it "get_oauth_tokenの設定を与えた値が取得できること" do
-
     Eventaskbot::Api::Auth.configure do |c|
       c.get_oauth_token = @assert
     end
-
     expect(Eventaskbot::Api::Auth.options[:get_oauth_token]).to eq(@assert)
+  end
+
+  it "設定が存在する場合は値が取得できる" do
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = @assert
+    end
+    expect(Eventaskbot::Api::Auth.option(:get_oauth_token)).to eq(@assert)
   end
 
 
