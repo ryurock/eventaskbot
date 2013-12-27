@@ -19,15 +19,24 @@ module Eventaskbot
         # 設定を取得する
         #
         def options
-          value = {}
-
-          instance_variables.each do |var|
+          instance_variables.inject({}) do |a,var|
             k = var.to_s.tr('@','')
-            value[k.to_sym] = instance_variable_get(var)
-            value = value.merge(value)
+            a[k.to_sym] = instance_variable_get(var)
+            a.merge(a)
           end
+        end
 
-          value
+        #
+        # 設定をインスタンス変数単位で取得する
+        # @param name[Symbol] 取得したいインスタンス変数
+        # @return nil | Mix 設定の値
+        #
+        def option(name)
+          opts = options
+
+          return nil if opts.nil? || opts.key?(name) == false
+
+          opts[name]
         end
 
         #

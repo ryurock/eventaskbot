@@ -24,7 +24,6 @@ describe Eventaskbot::Api::File, "Eventaskbot File API Module" do
   end
 
   it "get_oauth_tokenの設定を与えた値が取得できること" do
-
     Eventaskbot::Api::File.configure do |c|
       c.init = @assert
     end
@@ -32,5 +31,18 @@ describe Eventaskbot::Api::File, "Eventaskbot File API Module" do
     expect(Eventaskbot::Api::File.options[:init]).to eq(@assert)
   end
 
+  it "optionメソッド実行時に設定を記載していない状態でoptionをとろうとした場合の結果はnil" do
+    expect(Eventaskbot::Api::File.option(:init)).to eq(nil)
+  end
 
+  it "optionメソッド実行時に存在しない設定を検索した場合の結果はnil" do
+    expect(Eventaskbot::Api::File.option(:hoge)).to eq(nil)
+  end
+
+  it "設定が存在する場合は値が取得できる" do
+    Eventaskbot::Api::File.configure do |c|
+      c.init = @assert
+    end
+    expect(Eventaskbot::Api::File.option(:init)).to eq(@assert)
+  end
 end
