@@ -9,9 +9,11 @@ end
 
 # File API setting
 Eventaskbot::Api::File.configure do |c|
-# File API add setting
+# File/Init API settings
 # example
-# c.init = {:service => :yammer}
+# c.init = {
+#   :force_update => false, # force create EventaskbotFile
+# }
 end
 
 # Collector API setting
