@@ -11,6 +11,7 @@ module Eventaskbot
   module Configurable
     module Merge
       class << self
+
         #
         # コマンドラインオプションを設定にマージする
         # @params [Eventaskbot::Command] コマンドラインオプションクラス
@@ -19,8 +20,8 @@ module Eventaskbot
         def command(obj)
           return Eventaskbot.options if obj.nil?
           Eventaskbot.configure do |c|
-            c.response          = {}                   if c.response.nil?
-            c.response[:format] = obj.opts[:format]    if obj.opts.key? :format
+            c.response          = {}                         if c.response.nil?
+            c.response[:format] = obj.opts[:format]          if obj.opts.key? :format
 
             c.api               = {}                         if obj.opts.key?(:api) && c.api.nil?
             c.api[:name]        = obj.opts[:api][:name]      if obj.opts.key?(:api) && obj.opts[:api].key?(:name)
@@ -47,7 +48,7 @@ module Eventaskbot
           load path
 
           Eventaskbot.configure do |c|
-            c.config_file          = {}                   if c.config_file.nil?
+            c.config_file          = {}   if c.config_file.nil?
             c.config_file[:path]   = path
           end
 
