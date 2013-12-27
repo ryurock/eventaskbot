@@ -22,10 +22,7 @@ module Eventaskbot
         #optiosnに追加したい値をinjectする
         options = options.inject({}) do |a, (k,v)|
            a[k] = v
-
-           if k == :api
-             a[k] = Api.filter(v)
-           end
+           a[k] = Api.filter(v) if k == :api
 
            if k == :response
 
@@ -48,16 +45,8 @@ module Eventaskbot
       # @return [Boolean] true 存在する | false 存在しない
       #
       def self.format_exist?(name)
-        res = false
-
-        get_format_types.each do |v|
-          if name == v
-            res = true
-            break
-          end
-        end
-
-        res
+        get_format_types.each{ |v| return true if name == v }
+        false
       end
 
       #
