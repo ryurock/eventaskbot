@@ -17,6 +17,7 @@ module Eventaskbot
 
           opts[:name] = opts[:name].to_s
           raise "options api name #{opts[:name]} not found."  unless api_exist?(opts[:name])
+          opts[:params] = {} unless opts.key?(:params)
 
           opts[:type]  = :collector unless collector_api_list.index(opts[:name]).nil?
           opts[:type]  = :file      unless file_api_list.index(opts[:name]).nil?
