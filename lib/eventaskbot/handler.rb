@@ -1,6 +1,6 @@
 require 'eventaskbot'
 require 'eventaskbot/command'
-require 'eventaskbot/handler/configurable_filter'
+require 'eventaskbot/configurable/filter'
 require 'eventaskbot/configurable/merge'
 
 #
@@ -9,7 +9,7 @@ require 'eventaskbot/configurable/merge'
 module Eventaskbot
   module Handler
 
-    include ConfigurableFilter
+    include Configurable::Filter
     include Configurable::Merge
 
     #
@@ -22,7 +22,7 @@ module Eventaskbot
       Configurable::Merge.command(opts[:command])
 
       #設定をフィルタリング
-      opts = ConfigurableFilter.filter(Eventaskbot.options)
+      opts = Configurable::Filter.filter(Eventaskbot.options)
     end
   end
 end

@@ -3,14 +3,14 @@
 require File.expand_path(File.join('../../', 'spec_helper'), File.dirname(__FILE__))
 
 require 'eventaskbot'
-require 'eventaskbot/handler/configurable_filter'
+require 'eventaskbot/configurable/filter'
 
-describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
+describe Eventaskbot::Configurable::Filter, "Eventaskbot Configurable Filter Module" do
   before(:each) do
   end
 
   it "モジュールである事の確認" do
-    expect(Eventaskbot::Handler::ConfigurableFilter.class).to eq(Module)
+    expect(Eventaskbot::Configurable::Filter.class).to eq(Module)
   end
 
   it "filterメソッド実行時にoptionsの値:responseがnilの場合は例外が発生する" do
@@ -18,7 +18,7 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
       c.api = {:name => "init"}
     end
 
-    expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to raise_error
+    expect{ Eventaskbot::Configurable::Filter.filter(Eventaskbot.options) }.to raise_error
   end
 
   it "filterメソッド実行時にoptionsの値:response[:format]がnilの場合は例外が発生する" do
@@ -27,7 +27,7 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
       c.response = {:format => nil}
     end
 
-    expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to raise_error
+    expect{ Eventaskbot::Configurable::Filter.filter(Eventaskbot.options) }.to raise_error
   end
 
   it "filterメソッド実行時に存在しないフォーマットの場合は例外が発生する" do
@@ -36,7 +36,7 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
       c.response = {:format => "hoge"}
     end
 
-    expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to raise_error
+    expect{ Eventaskbot::Configurable::Filter.filter(Eventaskbot.options) }.to raise_error
   end
 
   it "全てのfilterを通過した場合は例外が発生しない" do
@@ -45,7 +45,7 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Config Filter Module" do
       c.response = {:format => "json"}
     end
 
-    expect{ Eventaskbot::Handler::ConfigurableFilter.filter(Eventaskbot.options) }.to_not raise_error
+    expect{ Eventaskbot::Configurable::Filter.filter(Eventaskbot.options) }.to_not raise_error
   end
 
 end

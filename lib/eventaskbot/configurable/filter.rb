@@ -1,13 +1,13 @@
-require 'eventaskbot/handler/api_filter'
+require 'eventaskbot/configurable/filter/api'
 
 #
 # 設定をフィルタリングするモジュール
 #
 module Eventaskbot
-  module Handler
-    module ConfigurableFilter
+  module Configurable
+    module Filter
 
-      include ApiFilter
+      include Api
 
       #
       # フィルター
@@ -24,7 +24,7 @@ module Eventaskbot
            a[k] = v
 
            if k == :api
-             a[k] = ApiFilter.filter(v)
+             a[k] = Api.filter(v)
            end
 
            if k == :response
