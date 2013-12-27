@@ -23,22 +23,6 @@ module Eventaskbot
 
       #設定をフィルタリング
       opts = ConfigurableFilter.filter(Eventaskbot.options)
-      api_handler(opts)
-    end
-
-    #
-    # とりあえず実装で場所移す
-    #
-    def api_handler(opts)
-      path = File.expand_path(__FILE__ + "../../api/#{opts[:api][:type].to_s}/#{opts[:api][:name].gsub(/-/, "_")}")
-      require path
-
-      klass_name = opts[:api][:name].split("-").inject([]) do |a,v|
-        a.push(v.capitalize)
-      end
-
-      klass = "Eventaskbot::Api::#{opts[:api][:type].to_s.capitalize}::#{klass_name.join("")}.new"
-      eval klass
     end
   end
 end

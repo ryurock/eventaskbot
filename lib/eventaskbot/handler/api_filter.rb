@@ -17,10 +17,27 @@ module Eventaskbot
         opts[:name] = opts[:name].to_s
         raise "options api name #{opts[:name]} not found."  unless api_exist?(opts[:name])
 
-        opts[:type] = :collector unless get_collectors.index(opts[:name]).nil?
-        opts[:type] = :etc       unless get_etc.index(opts[:name]).nil?
+        opts[:type]  = :collector unless get_collectors.index(opts[:name]).nil?
+        opts[:type]  = :etc       unless get_etc.index(opts[:name]).nil?
+        opts[:klass] = api_load(opts[:name], opts[:type])
 
         opts
+      end
+
+      #
+      # APIクラスを動的にロード
+      # @param name[String] API名
+      # @param type[String] API種別
+      # @return [Object] 動的にロードされたAPIインスタンス
+      #
+      def self.api_load(name, type)
+        path = File.expand_path(__FILE__ + "../../../api/#{type.to_s}/#{name.gsub(/-/, "_")}")
+        require path
+
+        klass_name = name.split("-").inject([]){ |a,v| a.push(v.capitalize) }
+        klass = "Eventaskbot::Api::#{type.to_s.capitalize}::#{klass_name.join("")}.new"
+
+        eval klass
       end
 
       #

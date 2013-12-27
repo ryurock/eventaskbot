@@ -24,22 +24,16 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
   end
 
   it "commandオプションを指定した場合は値が変更される" do
-    assert = {
-      :response    => {:format => :json},
-      :api         => {:name=>"get-oauth-token", :params => {}, :type => :etc},
-      :plugin_dir  => "plugins/",
-      :config_file => nil
-    }
-
+    assert = 'get-oauth-token'
     Eventaskbot.configure do |c|
       c.api = {:name => :init}
       c.response = {:format => "json"}
     end
 
-    argv = ["get-oauth-token"]
+    argv = [assert]
     command = Eventaskbot::Command.new(argv)
     command.parse
     Eventaskbot.run({ :command => command})
-    expect(Eventaskbot.options).to eq(assert)
+    expect(Eventaskbot.options[:api][:name]).to eq(assert)
   end
 end

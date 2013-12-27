@@ -33,17 +33,56 @@ describe Eventaskbot::Handler, "Eventaskbot Handler API Filter Module" do
 
     ["init", "get-oauth-token"].each do |v|
       opts = {:name => v}
-
-      expect(Eventaskbot::Handler::ApiFilter.filter(opts)).to eq({:name => v, :type => :etc})
+      res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+      expect(res[:type]).to eq(:etc)
     end
+  end
+
+  it "init,get-oauth-tokenのAPI名がレスポンスに入ってる事" do
+
+    ["init", "get-oauth-token"].each do |v|
+      opts = {:name => v}
+      res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+      expect(res[:name]).to eq(v)
+    end
+  end
+
+  it "init,get-oauth-tokenのAPIインスタンスがレスポンスに入ってる事" do
+    opts = {:name => 'init'}
+    res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::Etc::Init)
+
+    opts = {:name => 'get-oauth-token'}
+    res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::Etc::GetOauthToken)
   end
 
   it "terget-set,has-ticketのAPI種別は:collectorである" do
     ["terget-set", "has-ticket"].each do |v|
       opts = {:name => v}
 
-      expect(Eventaskbot::Handler::ApiFilter.filter(opts)).to eq({:name => v, :type => :collector})
+      res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+      expect(res[:type]).to eq(:collector)
     end
+  end
+
+  it "terget-set,has-ticketのAPI名がレスポンスに入ってる事" do
+    ["terget-set", "has-ticket"].each do |v|
+      opts = {:name => v}
+
+      res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+      expect(res[:name]).to eq(v)
+    end
+  end
+
+  it "terget-set,has-ticketのAPIインスタンスがレスポンスに入ってる事" do
+    opts = {:name => 'terget-set'}
+    res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::Collector::TergetSet)
+
+    opts = {:name => 'has-ticket'}
+    res  = Eventaskbot::Handler::ApiFilter.filter(opts)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::Collector::HasTicket)
   end
 
   it "filterの戻り値はHash" do
