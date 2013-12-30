@@ -4,7 +4,14 @@
 Eventaskbot::Api::Auth.configure do |c|
 # Auth API add setting
 # example
-# c.get_oauth_token = {:service => :yammer}
+# c.get_oauth_token = {
+#    :service => {
+#       :yammer => {
+#         :user => "your login name",
+#         :pass => "your login pass"
+#       }
+#     }
+# }
 end
 
 # File API setting
