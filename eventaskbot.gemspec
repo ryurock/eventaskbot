@@ -26,5 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "eventmachine"
   spec.add_development_dependency "whenever"
   spec.add_development_dependency "multi_json"
+  spec.add_development_dependency "term-ansicolor"
   spec.add_development_dependency "yammer"
 end

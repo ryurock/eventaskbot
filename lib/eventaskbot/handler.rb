@@ -1,5 +1,6 @@
 require 'eventaskbot'
 require 'eventaskbot/command'
+require 'eventaskbot/response'
 require 'eventaskbot/configurable/filter'
 require 'eventaskbot/configurable/merge'
 
@@ -31,6 +32,7 @@ module Eventaskbot
       #設定をフィルタリング
       conf = Configurable::Filter.filter(Eventaskbot.options)
       conf[:api][:klass].execute conf[:api][:params]
+      return Eventaskbot::Response.new(conf[:api][:klass])
     end
   end
 end
