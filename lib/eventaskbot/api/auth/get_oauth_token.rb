@@ -29,6 +29,7 @@ module Eventaskbot
             @res = filter(v)
 
             return @res if @res[:status] == :fail
+
             Capybara.run_server = false
             Capybara.default_driver = :webkit
 

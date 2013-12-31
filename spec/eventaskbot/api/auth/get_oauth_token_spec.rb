@@ -42,6 +42,17 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     expect(res[:status]).to eq(:fail)
   end
 
+  it "serviceのパラメーターは存在するが:userのパラメーターが存在しない場合は:fail" do
+    params = {
+      :service => {
+        :yammer => { :pass => 'hoge'}
+      }
+    }
+    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+    res = get_oauth_token.execute(params)
+    expect(res[:status]).to eq(:fail)
+  end
+
   it "serviceのパラメー" do
     params = {
       :service => {
@@ -50,6 +61,6 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     }
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute(params)
-    expect(res[:status]).to eq(:fail)
+    expect(res[:status]).to eq(:ok)
   end
 end
