@@ -33,4 +33,8 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
     expect{ Eventaskbot::Configurable::Filter::Service.filter(opts) }.not_to raise_error
   end
 
+  it "filterメソッド実行時にpluginsのオプションを追加してもエラーが発生しない" do
+    opts = {:yammer => {:secret_token => "hoge", :token => "fuga"}}
+    expect{ Eventaskbot::Configurable::Filter::Service.filter(opts) }.not_to raise_error
+  end
 end
