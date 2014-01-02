@@ -8,7 +8,8 @@ require 'eventaskbot/api/auth'
 describe Eventaskbot::Api::Auth, "Eventaskbot Auth API Module" do
   before(:each) do
     Eventaskbot::Api::Auth.reset
-    @assert = {:service => [:yammer, :redmine]}
+    Eventaskbot.reset
+    @assert = { :service => { :yammer => {}, :redmine => {} } }
   end
 
   it "モジュールである事の確認" do

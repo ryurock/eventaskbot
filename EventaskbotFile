@@ -32,4 +32,5 @@ end
 
 Eventaskbot.configure do |c|
   c.plugin_dir = "plugins/"
+  c.service = {:yammer => {}}
 end
