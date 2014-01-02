@@ -24,7 +24,8 @@ module Eventaskbot
         #optiosnに追加したい値をinjectする
         options = options.inject({}) do |a, (k,v)|
           a[k] = v
-          a[k] = Api.filter(v) if k == :api
+          a[k] = Api.filter(v)     if k == :api
+          a[k] = Service.filter(v) if k == :service
 
           if k == :response
 
@@ -34,8 +35,6 @@ module Eventaskbot
             a[k][:format] = v[:format].to_sym
             raise "options responsep format name #{v[:format]} not found."  unless format_exist?(a[k][:format])
           end
-
-          a[k] = Service.filter(v) if k == :service
 
           a
         end
