@@ -1,4 +1,5 @@
 require 'eventaskbot/configurable/filter/api'
+require 'eventaskbot/configurable/filter/service'
 
 #
 # 設定をフィルタリングするモジュール
@@ -8,6 +9,7 @@ module Eventaskbot
     module Filter
 
       include Api
+      include Service
 
       #
       # フィルター
@@ -21,19 +23,21 @@ module Eventaskbot
 
         #optiosnに追加したい値をinjectする
         options = options.inject({}) do |a, (k,v)|
-           a[k] = v
-           a[k] = Api.filter(v) if k == :api
+          a[k] = v
+          a[k] = Api.filter(v) if k == :api
 
-           if k == :response
+          if k == :response
 
-             raise "options :response is NilClass."             if     v.nil?
-             raise "options :response[:format] is NilClass."    if     v[:format].nil?
+            raise "options :response is NilClass."             if     v.nil?
+            raise "options :response[:format] is NilClass."    if     v[:format].nil?
 
-             a[k][:format] = v[:format].to_sym
-             raise "options responsep format name #{v[:format]} not found."  unless format_exist?(a[k][:format])
-           end
+            a[k][:format] = v[:format].to_sym
+            raise "options responsep format name #{v[:format]} not found."  unless format_exist?(a[k][:format])
+          end
 
-           a
+          a[k] = Service.filter(v) if k == :service
+
+          a
         end
 
         options

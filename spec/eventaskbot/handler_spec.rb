@@ -58,4 +58,15 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     Eventaskbot.run
     expect(Eventaskbot.options[:config_file][:path].nil?).to eq(false)
   end
+
+  it "service" do
+    Eventaskbot.configure do |c|
+      c.api = {:name => 'get-oauth-token'}
+      c.service = {:yammer => {}}
+      c.response = {:format => "json"}
+    end
+
+    Eventaskbot.run
+    expect(Eventaskbot.options[:service].class).to eq(Hash)
+  end
 end

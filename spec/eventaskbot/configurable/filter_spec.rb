@@ -7,6 +7,7 @@ require 'eventaskbot/configurable/filter'
 
 describe Eventaskbot::Configurable::Filter, "Eventaskbot Configurable Filter Module" do
   before(:each) do
+    Eventaskbot.reset
   end
 
   it "モジュールである事の確認" do
