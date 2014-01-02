@@ -39,7 +39,6 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
   end
 
   it "initは設定ファイルを作成するのでconfig_fileの設定が入ってこない" do
-    assert = 'init'
     Eventaskbot.configure do |c|
       c.api = {:name => :init}
       c.response = {:format => "json"}
@@ -59,7 +58,7 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     expect(Eventaskbot.options[:config_file][:path].nil?).to eq(false)
   end
 
-  it "service" do
+  it "serviceを設定した場合はserviceにHashが入る" do
     Eventaskbot.configure do |c|
       c.api = {:name => 'get-oauth-token'}
       c.service = {:yammer => {}}

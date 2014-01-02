@@ -21,8 +21,7 @@ module Eventaskbot
           opts = opts.inject({}) do |h, (k,v)|
 
             h[k] = v
-            path = File.expand_path(__FILE__ + "../../../../../../plugins/#{k.to_s}")
-
+            path = File.expand_path(__FILE__ + "../../../../../../plugins/eventaskbot-#{k.to_s}-plugins/#{k.to_s}")
             raise "file not found. plugins #{path}" unless File.exist? "#{path}.rb"
             require path
 
