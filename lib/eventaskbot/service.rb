@@ -10,7 +10,7 @@ module Eventaskbot
       @services = []
     end
 
-    def config_merge
+    def import
       opts = Eventaskbot.options
       api_name   = opts[:api][:name].gsub(/-/, "_").to_sym
       sub_conf = eval "Eventaskbot::Api::#{opts[:api][:type].to_s.capitalize}.options"
@@ -89,9 +89,8 @@ module Eventaskbot
       # @return [Boolean] true 存在する | false 存在しない
       #
       def sub_conf_options_exist(sub_conf,api_name, key)
-        return false if     sub_conf.nil?
-        return false unless sub_conf.key?(api_name)
-        return false if     sub_conf[api_name].nil?
+        return false if     sub_conf.nil? || sub_conf.key?(api_name) == false
+        return false if     sub_conf[api_name].nil? || sub_conf[api_name].key?(key) == false
         return false unless sub_conf[api_name].key?(key)
         return true
       end

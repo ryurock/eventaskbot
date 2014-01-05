@@ -23,7 +23,7 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     expect(Eventaskbot::Service.class).to eq(Class)
   end
 
-  it "config_mergeメソッド実行時でベースの設定しか設定をしていない場合の戻り値はベースの設定とイコール" do
+  it "importメソッド実行時でベースの設定しか設定をしていない場合の戻り値はベースの設定とイコール" do
     assert = { :yammer => { :client_id => "hoge", :client_secret => "fuga" } }
 
     Eventaskbot.configure do |c|
@@ -31,12 +31,12 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     service.params.delete(:klass)
     expect(service.params).to eq(assert)
   end
 
-  it "config_mergeメソッド実行時でベースの設定+sub設定をしている場合の戻り値はベースの設定とマージされる" do
+  it "importメソッド実行時でベースの設定+sub設定をしている場合の戻り値はベースの設定とマージされる" do
     assert = { :yammer => { :client_id => "hoge", :client_secret => "fuga", :user => "user1" } }
 
     Eventaskbot.configure do |c|
@@ -48,12 +48,12 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     service.params.delete(:klass)
     expect(service.params).to eq(assert)
   end
 
-  it "config_mergeメソッド実行時でベースの設定+sub設定+params設定をしている場合の戻り値はベースの設定とマージされる" do
+  it "importメソッド実行時でベースの設定+sub設定+params設定をしている場合の戻り値はベースの設定とマージされる" do
     assert = { :yammer => { :client_id => "hoge", :client_secret => "fuga", :user => "user1", :pass => "pass" } }
 
     Eventaskbot.configure do |c|
@@ -73,12 +73,12 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     service.params.delete(:klass)
     expect(service.params).to eq(assert)
   end
 
-  it "config_mergeメソッド実行時でベースの設定+sub設定をしているがsub設定でserviceの指定で:yammerを除外しているので中身は空のHash" do
+  it "importメソッド実行時でベースの設定+sub設定をしているがsub設定でserviceの指定で:yammerを除外しているので中身は空のHash" do
     assert = { }
 
     Eventaskbot.configure do |c|
@@ -93,11 +93,11 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     expect(service.params).to eq(assert)
   end
 
-  it "config_mergeメソッド実行時でベースの設定+sub設定をしているがapiパラメーターの設定でserviceの指定で:yammerを除外しているので中身は空のHash" do
+  it "importメソッド実行時でベースの設定+sub設定をしているがapiパラメーターの設定でserviceの指定で:yammerを除外しているので中身は空のHash" do
     assert = { }
 
     Eventaskbot.configure do |c|
@@ -111,11 +111,11 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     expect(service.params).to eq(assert)
   end
 
-  it "config_mergeメソッド実行時でserviceがない場合の@servicesは空の配列" do
+  it "importメソッド実行時でserviceがない場合の@servicesは空の配列" do
     assert = []
 
     Eventaskbot.configure do |c|
@@ -129,11 +129,11 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     expect(service.services).to eq(assert)
   end
 
-  it "config_mergeメソッド実行時でserviceがある場合の@servicesは配列に値が入っている" do
+  it "importメソッド実行時でserviceがある場合の@servicesは配列に値が入っている" do
     assert = [:yammer]
 
     Eventaskbot.configure do |c|
@@ -147,7 +147,7 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     expect(service.services).to eq(assert)
   end
 
@@ -163,7 +163,7 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     expect(service.has_service?).to eq(true)
   end
 
@@ -180,7 +180,7 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
     end
 
     service = Eventaskbot::Service.new
-    service.config_merge
+    service.import
     expect(service.has_service?).to eq(false)
   end
 end
