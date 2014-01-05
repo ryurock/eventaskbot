@@ -49,9 +49,9 @@ module Eventaskbot
         # @return [Boolean] true 存在する | false 存在しない
         #
         def self.api_exist?(name)
-          collector_api_list.each{ |v| return true if name == v }
-          auth_api_list.each{      |v| return true if name == v }
-          file_api_list.each{      |v| return true if name == v }
+          return true unless collector_api_list.index(name).nil?
+          return true unless auth_api_list.index(name).nil?
+          return true unless file_api_list.index(name).nil?
           false
         end
 
