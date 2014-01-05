@@ -14,13 +14,12 @@ module Eventaskbot
       opts = Eventaskbot.options
       api_name   = opts[:api][:name].gsub(/-/, "_").to_sym
       sub_conf = eval "Eventaskbot::Api::#{opts[:api][:type].to_s.capitalize}.options"
-
-      @params = deep_merge(@params, opts[:service]) if opts.key?(:service)
-      @params = deep_merge(@params, sub_conf[api_name][:service]) if sub_conf.nil? == false && sub_conf.key?(api_name) && sub_conf[api_name].nil? == false && sub_conf[api_name].key?(:service)
+      @params = deep_merge(@params, opts[:service])                if opts.key?(:service)
+      @params = deep_merge(@params, sub_conf[api_name][:service])  if sub_conf_options_exist(sub_conf,api_name, :service)
       @params = deep_merge(@params, opts[:api][:params][:service]) if opts[:api][:params].key?(:service)
 
       #sub設定でサービスの指定がある場合は削除する
-      if sub_conf.nil? == false && sub_conf.key?(api_name) && sub_conf[api_name].nil? == false && sub_conf[api_name].key?(:services)
+      if sub_conf_options_exist(sub_conf,api_name, :services)
         @params = @params.inject({}) do |h,(k,v)|
           h[k] = v unless sub_conf[api_name][:services].index(k).nil?
           h
@@ -56,8 +55,8 @@ module Eventaskbot
     # @return [Boolean] true 存在する | false 存在しない
     #
     def has_service?
-      return true if @services.size > 0
-      false
+      return false if @services.empty?
+      true
     end
 
     private
@@ -80,6 +79,14 @@ module Eventaskbot
         end
 
         service
+      end
+
+      def sub_conf_options_exist(sub_conf,api_name, key)
+        return false if     sub_conf.nil?
+        return false unless sub_conf.key?(api_name)
+        return false if     sub_conf[api_name].nil?
+        return false unless sub_conf[api_name].key?(key)
+        return true
       end
   end
 end
