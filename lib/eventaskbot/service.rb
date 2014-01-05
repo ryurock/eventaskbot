@@ -14,9 +14,10 @@ module Eventaskbot
       opts = Eventaskbot.options
       api_name   = opts[:api][:name].gsub(/-/, "_").to_sym
       sub_conf = eval "Eventaskbot::Api::#{opts[:api][:type].to_s.capitalize}.options"
-      @params = deep_merge(@params, opts[:service])                if opts.key?(:service)
-      @params = deep_merge(@params, sub_conf[api_name][:service])  if sub_conf_options_exist(sub_conf,api_name, :service)
-      @params = deep_merge(@params, opts[:api][:params][:service]) if opts[:api][:params].key?(:service)
+
+      @params = collect(@params, opts[:service])                if opts.key?(:service)
+      @params = collect(@params, sub_conf[api_name][:service])  if sub_conf_options_exist(sub_conf,api_name, :service)
+      @params = collect(@params, opts[:api][:params][:service]) if opts[:api][:params].key?(:service)
 
       #sub設定でサービスの指定がある場合は削除する
       if sub_conf_options_exist(sub_conf,api_name, :services)
@@ -62,25 +63,31 @@ module Eventaskbot
     private
 
       #
-      # 階層の深いマージ
+      # 値を取得してマージする
       # @param service[Hash] マージ元
       # @param opts[Hash] マージしたい値
       # @return [Hash] マージした値
       #
-      def deep_merge(service, opts)
-        if service.size > 0
-          service = service.inject({}) do |h,(k,v)|
-            h[k] = v
-            h[k] = h[k].merge(opts[k]) if opts.key? k
-            h
-          end
-        else
+      def collect(service, opts)
+        if service.empty?
           service = opts
+          return service
         end
 
-        service
+        service.inject({}) do |h,(k,v)|
+          h[k] = v
+          h[k] = h[k].merge(opts[k]) if opts.key? k
+          h
+        end
       end
-
+      
+      #
+      # sub設定に設定が存在するか？
+      # @param sub_conf[Hash | nil] sub_confの全設定
+      # @param api_name[Symbol] 設定値のAPi名
+      # @param key[Symbol] 設定の中の値
+      # @return [Boolean] true 存在する | false 存在しない
+      #
       def sub_conf_options_exist(sub_conf,api_name, key)
         return false if     sub_conf.nil?
         return false unless sub_conf.key?(api_name)
