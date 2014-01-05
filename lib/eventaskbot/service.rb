@@ -12,19 +12,17 @@ module Eventaskbot
 
     def config_merge
       opts = Eventaskbot.options
-      @params   = deep_merge @params, opts[:service] if opts.key?(:service)
+      api_name   = opts[:api][:name].gsub(/-/, "_").to_sym
+      sub_conf = eval "Eventaskbot::Api::#{opts[:api][:type].to_s.capitalize}.options"
 
-      sub_config_name = "Eventaskbot::Api::#{opts[:api][:type].to_s.capitalize}.options"
-      sub_config      = eval sub_config_name
-      api_name        = opts[:api][:name].gsub(/-/, "_").to_sym
-
-      @params = deep_merge(@params, sub_config[api_name][:service]) if sub_config.nil? == false && sub_config.key?(api_name) && sub_config[api_name].nil? == false && sub_config[api_name].key?(:service)
-      @params = deep_merge @params, opts[:api][:params][:service] if opts[:api][:params].key?(:service)
+      @params = deep_merge(@params, opts[:service]) if opts.key?(:service)
+      @params = deep_merge(@params, sub_conf[api_name][:service]) if sub_conf.nil? == false && sub_conf.key?(api_name) && sub_conf[api_name].nil? == false && sub_conf[api_name].key?(:service)
+      @params = deep_merge(@params, opts[:api][:params][:service]) if opts[:api][:params].key?(:service)
 
       #sub設定でサービスの指定がある場合は削除する
-      if sub_config.nil? == false && sub_config.key?(api_name) && sub_config[api_name].nil? == false && sub_config[api_name].key?(:services)
+      if sub_conf.nil? == false && sub_conf.key?(api_name) && sub_conf[api_name].nil? == false && sub_conf[api_name].key?(:services)
         @params = @params.inject({}) do |h,(k,v)|
-          h[k] = v unless sub_config[api_name][:services].index(k).nil?
+          h[k] = v unless sub_conf[api_name][:services].index(k).nil?
           h
         end
       end
