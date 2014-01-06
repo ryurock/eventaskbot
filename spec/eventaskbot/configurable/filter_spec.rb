@@ -16,7 +16,7 @@ describe Eventaskbot::Configurable::Filter, "Eventaskbot Configurable Filter Mod
 
   it "全てのfilterを通過した場合は例外が発生しない" do
     Eventaskbot.configure do |c|
-      c.api = {:name => "init"}
+      c.api = {:name => "init", :type => :file}
       c.response = {:format => "json"}
     end
 

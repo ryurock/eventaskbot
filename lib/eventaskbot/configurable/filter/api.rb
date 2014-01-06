@@ -22,6 +22,9 @@ module Eventaskbot
           opts[:type]  = :collector unless collector_api_list.index(opts[:name]).nil?
           opts[:type]  = :file      unless file_api_list.index(opts[:name]).nil?
           opts[:type]  = :auth      unless auth_api_list.index(opts[:name]).nil?
+
+          raise "options API type not cound" unless opts.key?(:type)
+
           opts[:klass] = api_load(opts[:name], opts[:type])
 
           opts
