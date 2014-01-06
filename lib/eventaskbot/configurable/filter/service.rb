@@ -1,5 +1,3 @@
-require 'eventaskbot/configurable/filter/api'
-
 #
 # 設定のServiceをフィルタリングするモジュール
 #
@@ -7,7 +5,6 @@ module Eventaskbot
   module Configurable
     module Filter
       module Service
-        include Filter::Api
 
         #
         # フィルター

@@ -96,6 +96,7 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
     Eventaskbot.configure do |c|
       c.api = { :name => 'get-oauth-token', :type => :auth, :params => {} }
       c.service = { :yammer => { :client_id => 'hoge' } }
+      c.response = {:format => :json}
     end
 
     Eventaskbot::Api::Auth.configure do |c|

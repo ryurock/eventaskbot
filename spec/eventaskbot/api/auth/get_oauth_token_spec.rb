@@ -24,74 +24,65 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     expect(res[:status]).to eq(:fail)
   end
 
-  it "設定値がHashではない場合は:fail" do
-    params = {
-      :service => {
-        :yammer => :hoge
-      }
-    }
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute(params)
-    expect(res[:status]).to eq(:fail)
-  end
-
-  it "serviceの設定に:klassがない場合は:fail" do
-    params = {
-      :service => {
-        :yammer => {
-          :user => 'hoge@example.com',
-        }
-      }
-    }
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute(params)
-    expect(res[:status]).to eq(:fail)
-  end
-
-  it "serviceのパラメーターは存在するが:passのパラメーターが存在しない場合は:fail" do
-    params = {
-      :service => {
-        :yammer => {
-          :user => 'hoge@example.com',
-          :klass => Eventaskbot::Plugins::Yammer.new
-        }
-      }
-    }
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute(params)
-    expect(res[:status]).to eq(:fail)
-  end
-
-  it "serviceのパラメーターは存在するが:userのパラメーターが存在しない場合は:fail" do
-    params = {
-      :service => {
-        :yammer => {
-          :pass => 'hoge',
-          :klass => Eventaskbot::Plugins::Yammer.new
-        }
-      }
-    }
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute(params)
-    expect(res[:status]).to eq(:fail)
-  end
-
-  it "serviceのパラメー" do
-    Eventaskbot.configure do |c|
-      c.service = {:yammer => { :client_id => 'hoge', :client_secret => "fuga"} }
-    end
-
-    params = {
-      :service => {
-        :yammer => {
-          :user  => 'hoge@example.com',
-          :pass  => 'fuga',
-          :klass => Eventaskbot::Plugins::Yammer.new
-        }
-      }
-    }
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute(params)
-    expect(res[:status]).to eq(:ok)
-  end
+#  it "serviceの設定に:klassがない場合は:fail" do
+#    params = {
+#      :service => {
+#        :yammer => {
+#          :user => 'hoge@example.com',
+#        }
+#      }
+#    }
+#    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+#    res = get_oauth_token.execute(params)
+#    expect(res[:status]).to eq(:fail)
+#  end
+#
+#  it "serviceのパラメーターは存在するが:passのパラメーターが存在しない場合は:fail" do
+#    params = {
+#      :service => {
+#        :yammer => {
+#          :user => 'hoge@example.com',
+#          :klass => Eventaskbot::Plugins::Yammer.new
+#        }
+#      }
+#    }
+#    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+#    res = get_oauth_token.execute(params)
+#    expect(res[:status]).to eq(:fail)
+#  end
+#
+#  it "serviceのパラメーターは存在するが:userのパラメーターが存在しない場合は:fail" do
+#    params = {
+#      :service => {
+#        :yammer => {
+#          :pass => 'hoge',
+#          :klass => Eventaskbot::Plugins::Yammer.new
+#        }
+#      }
+#    }
+#    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+#    res = get_oauth_token.execute(params)
+#    expect(res[:status]).to eq(:fail)
+#  end
+#
+#  it "テスト" do
+#    Eventaskbot.configure do |c|
+#      c.service = {:yammer => { :client_id => 'hoge', :client_secret => "fuga"} }
+#    end
+#
+#    Eventaskbot::Api::Auth.configure do |c|
+#      c.get_oauth_token = {
+#         :service => {
+#            :yammer => {
+#              :user => "your login name",
+#              :pass => "your login pass"
+#            }
+#          }
+#      }
+#    end
+#
+#    params = {:force_update => true}
+#    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+#    res = get_oauth_token.execute(params)
+#  end
 end

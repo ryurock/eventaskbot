@@ -23,4 +23,24 @@ describe Eventaskbot::Configurable::Filter, "Eventaskbot Configurable Filter Mod
     expect{ Eventaskbot::Configurable::Filter.filter(Eventaskbot.options) }.to_not raise_error
   end
 
+  it "filterを実行するとserviceの設定は全てsub設定にマージされる" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => 'get-oauth-token', :type => :auth, :params => {} }
+      c.service = { :yammer => { :client_id => 'hoge' } }
+      c.response = {:format => :json}
+    end
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = { 
+        :service => { 
+          :yammer  => { :client_secret => 'fuga' },
+          :redmine => { :client_secret => 'fuga' }
+        }
+      }
+    end
+    
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+    pp Eventaskbot::Api::Auth.options
+  end
+
 end
