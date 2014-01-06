@@ -1,3 +1,5 @@
+require 'eventaskbot/configurable/filter/api'
+
 #
 # 設定のServiceをフィルタリングするモジュール
 #
@@ -5,6 +7,7 @@ module Eventaskbot
   module Configurable
     module Filter
       module Service
+        include Filter::Api
 
         #
         # フィルター
@@ -12,23 +15,23 @@ module Eventaskbot
         # @return [Hash] filterして追加、削除した値の設定値
         #
         def self.filter(opts)
-          return opts if opts.nil?
-          raise "options service is not Hash" unless opts.instance_of?(Hash)
+          api_name = opts[:api][:name].gsub(/-/, "-")
+          api_type = opts[:api][:type]
 
-          plugins_path = File.expand_path('../../../../../plugins', __FILE__)
-          $LOAD_PATH.unshift(plugins_path) unless $LOAD_PATH.include?(plugins_path)
+          opts_service = {}
 
-          opts = opts.inject({}) do |h, (k,v)|
+          if opts.key?(:service) && opts[:service].nil? == false
+            opts_service = opts[:service]
+          end
 
-            h[k] = v
-            require "eventaskbot-#{k.to_s}-plugins/#{k.to_s}"
+          sub_opts = eval "Eventaskbot::Api::#{api_type.to_s.capitalize}.options"
 
-            klass = "Eventaskbot::Plugins::#{k.to_s.capitalize}.new"
-            h[k][:klass] = eval klass
-
-            h
+          if sub_opts.nil? == false && sub_opts.key?(api_name)
+            if sub_opts[api_name].nil? == false && sub_opts[api_name].key?(:service)
+            end
           end
         end
+
       end
     end
   end

@@ -24,7 +24,6 @@ module Eventaskbot
         raise "options :response not found."  unless options.key?(:response)
 
         options[:api]      = Api.filter(options[:api])
-        options[:service]  = Service.filter(options[:service]) if options.key?(:service)
         options[:response] = Response.filter(options[:response])
 
         options

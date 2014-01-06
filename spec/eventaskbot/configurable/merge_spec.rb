@@ -53,7 +53,7 @@ describe Eventaskbot::Configurable::Merge, "Eventaskbot Configurable::Merge Clas
     expect(Eventaskbot::Configurable::Merge.config_file(opts).class).to eq(Hash)
   end
 
-  it "commandの引数がnilの場合でもエラーにならないh" do
+  it "commandの引数がnilの場合でもエラーにならない" do
     expect{ Eventaskbot::Configurable::Merge.command(nil) }.not_to raise_error
   end
 end
