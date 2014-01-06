@@ -37,13 +37,8 @@ module Eventaskbot
         # @return [Hash] マージ後の設定値
         #
         def config_file(opts)
-          cur_path = "#{Dir.pwd}/EventaskbotFile"
-
-          if opts.key?(:config_file) && opts[:config_file].nil? == false && opts[:config_file].key?(:path)
-            path = opts[:config_file][:path]
-          else
-            path = cur_path
-          end
+          path = "#{Dir.pwd}/EventaskbotFile"
+          path = opts[:config_file][:path] if opts.key?(:config_file) && opts[:config_file].nil? == false && opts[:config_file].key?(:path)
 
           load path
 
