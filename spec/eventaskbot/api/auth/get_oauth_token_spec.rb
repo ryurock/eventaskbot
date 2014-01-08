@@ -75,23 +75,4 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     res = get_oauth_token.execute(params)
     expect(res[:status]).to eq(:fail)
   end
-
-  it "serviceのパラメー" do
-    Eventaskbot.configure do |c|
-      c.service = {:yammer => { :client_id => 'hoge', :client_secret => "fuga"} }
-    end
-
-    params = {
-      :service => {
-        :yammer => {
-          :user  => 'hoge@example.com',
-          :pass  => 'fuga',
-          :klass => Eventaskbot::Plugins::Yammer.new
-        }
-      }
-    }
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute(params)
-    expect(res[:status]).to eq(:ok)
-  end
 end

@@ -30,6 +30,7 @@ module Eventaskbot
 
           if option_exist?(sub_conf.options, api_name) && option_exist?(sub_conf.options[api_name], :service)
               sub_conf_service = sub_conf.options[api_name][:service]
+
               service = collect(service, sub_conf_service)
           end
 
@@ -43,6 +44,13 @@ module Eventaskbot
           use_service = opts[:use_service]                       if option_exist?(opts, :use_service)
           use_service = sub_conf.options[api_name][:use_service] if option_exist?(sub_conf.options, api_name) && option_exist?(sub_conf.options[api_name], :use_service)
           use_service = opts[:api][:params][:use_service]        if option_exist?(opts[:api][:params], :use_service)
+
+          service.inject({}) do | h,(k,v) |
+            h[k] = v
+            klass_name = api_name.to_s.split("_").map(&:capitalize).join("")
+            h[k][:klass] = "Eventaskbot::Services::#{k.capitalize}::#{klass_name}"
+            h
+          end
 
           return service if use_service.empty?
 
