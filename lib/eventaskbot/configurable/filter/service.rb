@@ -14,10 +14,7 @@ module Eventaskbot
         # @return [Hash] filterして追加、削除した値の設定値
         #
         def self.filter
-          service            = {}
-          opts_service       = {}
-          sub_conf_service   = {}
-          api_params_service = {}
+          service, opts_service, sub_conf_service, api_params_service = {}
 
           opts = Eventaskbot.options
 
