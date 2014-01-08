@@ -21,7 +21,8 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
       c.api = { :name => 'get-oauth-token', :type => :auth, :params => {} }
     end
     obj = Eventaskbot::Configurable::Filter::Service
-    expect(obj.filter).to eq({})
+    service = obj.filter
+    expect(service).to eq({})
   end
 
   it "filterメソッド実行時にAPIパラメータにサービスの設定をした場合は反映される" do
@@ -40,7 +41,9 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
     end
 
     obj = Eventaskbot::Configurable::Filter::Service
-    expect(obj.filter).to eq({ :yammer => { :client_id => 'hoge' }  })
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({ :yammer => { :client_id => 'hoge' }  })
   end
 
   it "filterメソッド実行時に親設定にサービスの設定をした場合は反映される" do
@@ -49,7 +52,9 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
       c.service = { :yammer => { :client_id => 'hoge' } }
     end
     obj = Eventaskbot::Configurable::Filter::Service
-    expect(obj.filter).to eq({ :yammer => { :client_id => 'hoge' }  })
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({ :yammer => { :client_id => 'hoge' }  })
   end
 
   it "filterメソッド実行時にsub設定にサービスの設定をした場合は反映される" do
@@ -61,7 +66,9 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
       c.get_oauth_token = { :service => { :yammer => { :client_id => 'hoge' } } }
     end
     obj = Eventaskbot::Configurable::Filter::Service
-    expect(obj.filter).to eq({ :yammer => { :client_id => 'hoge' }  })
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({ :yammer => { :client_id => 'hoge' }  })
   end
 
   it "filterメソッド実行時に親設定+sub設定にサービスの設定をした場合は値がマージされる" do
@@ -75,7 +82,9 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
     end
 
     obj = Eventaskbot::Configurable::Filter::Service
-    expect(obj.filter).to eq({ :yammer => { :client_id => 'hoge', :client_secret => 'fuga' }  })
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({ :yammer => { :client_id => 'hoge', :client_secret => 'fuga' }  })
   end
 
   it "filterメソッド実行時にAPIパラメーターのマージが一番最後なのでAPIパラメーターの値で上書きできる" do
@@ -89,7 +98,9 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
     end
 
     obj = Eventaskbot::Configurable::Filter::Service
-    expect(obj.filter).to eq({ :yammer => { :client_id => 'api_params', :client_secret => 'fuga' }  })
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({ :yammer => { :client_id => 'api_params', :client_secret => 'fuga' }  })
   end
 
   it "filterメソッド実行時に複数のサービスのパラメーターがマージされる" do
@@ -109,9 +120,83 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
     end
 
     obj = Eventaskbot::Configurable::Filter::Service
-    expect(obj.filter).to eq({ 
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    service[:redmine].delete(:klass)
+    expect(service).to eq({ 
       :yammer  => { :client_id => 'hoge', :client_secret => 'fuga' },
       :redmine => { :client_secret => 'fuga' },
+    })
+  end
+
+  it "filterメソッド実行時に親設定で使用するサービスの指定がある場合は使用するサービスが限定される" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => 'get-oauth-token', :type => :auth, :params => {} }
+      c.service     = { :yammer => { :client_id => 'hoge' } }
+      c.use_service = [:yammer]
+    end
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = { 
+        :service => { 
+          :yammer  => { :client_secret => 'fuga' },
+          :redmine => { :client_secret => 'fuga' }
+        }
+      }
+    end
+
+    obj = Eventaskbot::Configurable::Filter::Service
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({ 
+      :yammer  => { :client_id => 'hoge', :client_secret => 'fuga' }
+    })
+  end
+
+  it "filterメソッド実行時にsub設定で使用するサービスの指定がある場合は使用するサービスが限定される" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => 'get-oauth-token', :type => :auth, :params => {} }
+      c.service     = { :yammer => { :client_id => 'hoge' } }
+    end
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = { 
+        :service => { 
+          :yammer  => { :client_secret => 'fuga' },
+          :redmine => { :client_secret => 'fuga' }
+        },
+        :use_service => [:yammer]
+      }
+    end
+
+    obj = Eventaskbot::Configurable::Filter::Service
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({ 
+      :yammer  => { :client_id => 'hoge', :client_secret => 'fuga' }
+    })
+  end
+
+  it "filterメソッド実行時にsub設定で使用するサービスの指定がある場合は使用するサービスが限定される" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => 'get-oauth-token', :type => :auth, :params => { :use_service => [:yammer]} }
+      c.service     = { :yammer => { :client_id => 'hoge' } }
+    end
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = {
+        :service => {
+          :yammer  => { :client_secret => 'fuga' },
+          :redmine => { :client_secret => 'fuga' }
+        }
+      }
+    end
+
+    obj = Eventaskbot::Configurable::Filter::Service
+    service = obj.filter
+    service[:yammer].delete(:klass)
+    expect(service).to eq({
+      :yammer  => { :client_id => 'hoge', :client_secret => 'fuga' }
     })
   end
 end
