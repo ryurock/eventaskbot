@@ -26,10 +26,10 @@ module Eventaskbot
         options[:api]      = Api.filter(options[:api])
         Eventaskbot.configure { |c| c.api = options[:api] }
 
-        options[:service]  = Service.filter
-        api_type     = Eventaskbot.options[:api][:type]
-        api_name     = Eventaskbot.options[:api][:name].gsub(/-/,"_")
-        Service.sub_conf_instance(api_type).instance_variable_set("@#{api_name}", options[:service])
+        options[:service] = Service.filter
+        api_type = Eventaskbot.options[:api][:type]
+        api_name = Eventaskbot.options[:api][:name].gsub(/-/,"_")
+        Service.sub_conf_instance_get(api_type).instance_variable_set("@#{api_name}", options[:service])
 
         options[:response] = Response.filter(options[:response])
         Eventaskbot.configure { |c| c.response = options[:response] }

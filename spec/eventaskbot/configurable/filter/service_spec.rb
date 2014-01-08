@@ -113,4 +113,69 @@ describe Eventaskbot::Configurable::Filter::Service, "Eventaskbot configurable f
       :redmine => { :client_secret => 'fuga' },
     })
   end
+
+  it "filterメソッド実行時に親設定で使用するサービスの指定がある場合は使用するサービスが限定される" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => 'get-oauth-token', :type => :auth, :params => {} }
+      c.service     = { :yammer => { :client_id => 'hoge' } }
+      c.use_service = [:yammer]
+    end
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = { 
+        :service => { 
+          :yammer  => { :client_secret => 'fuga' },
+          :redmine => { :client_secret => 'fuga' }
+        }
+      }
+    end
+
+    obj = Eventaskbot::Configurable::Filter::Service
+    expect(obj.filter).to eq({ 
+      :yammer  => { :client_id => 'hoge', :client_secret => 'fuga' }
+    })
+  end
+
+  it "filterメソッド実行時にsub設定で使用するサービスの指定がある場合は使用するサービスが限定される" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => 'get-oauth-token', :type => :auth, :params => {} }
+      c.service     = { :yammer => { :client_id => 'hoge' } }
+    end
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = { 
+        :service => { 
+          :yammer  => { :client_secret => 'fuga' },
+          :redmine => { :client_secret => 'fuga' }
+        },
+        :use_service => [:yammer]
+      }
+    end
+
+    obj = Eventaskbot::Configurable::Filter::Service
+    expect(obj.filter).to eq({ 
+      :yammer  => { :client_id => 'hoge', :client_secret => 'fuga' }
+    })
+  end
+
+  it "filterメソッド実行時にsub設定で使用するサービスの指定がある場合は使用するサービスが限定される" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => 'get-oauth-token', :type => :auth, :params => { :use_service => [:yammer]} }
+      c.service     = { :yammer => { :client_id => 'hoge' } }
+    end
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = {
+        :service => {
+          :yammer  => { :client_secret => 'fuga' },
+          :redmine => { :client_secret => 'fuga' }
+        }
+      }
+    end
+
+    obj = Eventaskbot::Configurable::Filter::Service
+    expect(obj.filter).to eq({ 
+      :yammer  => { :client_id => 'hoge', :client_secret => 'fuga' }
+    })
+  end
 end

@@ -26,10 +26,10 @@ module Eventaskbot
             service = collect(service, opts_service)
           end
 
-          api_name     = opts[:api][:name].gsub(/-/, "_").to_sym
-          api_type     = opts[:api][:type]
+          api_name = opts[:api][:name].gsub(/-/, "_").to_sym
+          api_type = opts[:api][:type]
 
-          sub_conf = sub_conf_instance(api_type)
+          sub_conf = sub_conf_instance_get(api_type)
 
           if option_exist?(sub_conf.options, api_name) && option_exist?(sub_conf.options[api_name], :service)
               sub_conf_service = sub_conf.options[api_name][:service]
@@ -41,7 +41,23 @@ module Eventaskbot
             service = collect(service, api_params_service)
           end
 
+          use_service = []
+
+          use_service = opts[:use_service]                       if option_exist?(opts, :use_service)
+          use_service = sub_conf.options[api_name][:use_service] if option_exist?(sub_conf.options, api_name) && option_exist?(sub_conf.options[api_name], :use_service)
+          use_service = opts[:api][:params][:use_service]        if option_exist?(opts[:api][:params], :use_service)
+
+          return service if use_service.empty?
+
+          service = service.inject({}) do |h, (k,v)|
+            h[k] = v unless use_service.index(k).nil?
+            h
+          end
+
           service
+        end
+
+        def collect_service(opts)
         end
 
         #
@@ -60,7 +76,7 @@ module Eventaskbot
         # @param api_type[Symbol] api種別
         # @return [Object] API種別に応じたオブジェクト
         #
-        def self.sub_conf_instance(api_type)
+        def self.sub_conf_instance_get(api_type)
           eval "Eventaskbot::Api::#{api_type.to_s.capitalize}"
         end
 
