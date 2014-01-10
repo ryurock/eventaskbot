@@ -16,9 +16,21 @@ Or install it yourself as:
 
     $ gem install eventaskbot
 
+## Dependency Gem
+
+* [eventmachine](https://github.com/eventmachine/eventmachine)
+* [multi_json](https://github.com/intridea/multi_json)
+* [term-ansicolor](https://github.com/flori/term-ansicolor)
+* [yammer](https://github.com/yammer/yam?source=c)
+
 ## Usage
 
-TODO: Write usage instructions here
+### Step1. Eventaskbot init
+
+```
+$ eventaskbot init
+[Created] Setting File dest 'current_path'
+```
 
 ## Contributing
 
