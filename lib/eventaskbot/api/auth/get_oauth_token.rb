@@ -8,7 +8,6 @@ module Eventaskbot
         attr_accessor :res
         def execute(params)
           opts = Auth.option(:get_oauth_token)
-          pp opts
           @res = {:status => :fail, :message => ""}
 
           if opts.nil?

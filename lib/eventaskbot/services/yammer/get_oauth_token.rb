@@ -1,6 +1,6 @@
+require "uri"
 require "yammer"
-require 'capybara'
-require 'capybara/dsl'
+require "mechanize"
 
 #
 # Plugins Yammer Module
@@ -17,22 +17,42 @@ module Eventaskbot
         end
 
         def execute(opts)
+          #配列の値をバリデート
+          [:user, :pass, :client_id, :client_secret].each{ |v| return @res if validate opts, v }
+          agent = Mechanize.new
+          agent.user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1539.0 Safari/537.36"
+          page = agent.get('https://www.yammer.com/login')
 
-          unless opts.key?(:user)
-            @res[:message] = "[Failed] parametor or EventaskbotFile Setting :service => :user is not found"
-            return @res
+          page = page.form_with(:id => 'login-form') do |form|
+            form.login    = opts[:user]
+            form.password = opts[:pass]
+          end.submit
+
+          #強引だが例外で出たURLをパースしてごまかす
+          begin
+            page = agent.get("https://www.yammer.com/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
+          rescue Mechanize::ResponseCodeError => ex
+            pp URI.extract(ex.message)[1]
           end
-
-          unless opts.key? :pass
-            @res[:message] = "[Failed] parametor or EventaskbotFile Setting :service => :pass is not found"
-            return @res
-          end
-
-          Capybara.run_server = false
-          Capybara.default_driver = :webkit
-
           @res[:status] = :ok
           @res
+        end
+
+        #
+        # パラメーターのバリデート
+        # @param opts[Hash] バリデートしたい値
+        # @param key[Symbol] バリデートしたいキー
+        # @return true バリデートでブロックした | false バリデート通過
+        #
+        def validate(opts, key)
+          unless opts.key? key
+            @res[:message] = "[Failed] parametor or EventaskbotFile Setting #{key} => #{key} is not found"
+            @res[:status] = :fail
+            return true
+          end
+
+          @res[:status] = :ok
+          false
         end
       end
     end

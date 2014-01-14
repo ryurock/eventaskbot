@@ -22,6 +22,19 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     Eventaskbot.configure do |c|
       c.api = { :name => "get-oauth-token", :type => :auth }
       c.response = { :format => "json" }
+    end
+
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+    res = get_oauth_token.execute({})
+    expect(res[:status]).to eq(:fail)
+  end
+
+  it "serviceのパラメーターが存在するが:userのパラメーターがない場合は:fail" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
       c.service = { :yammer => { :client_id => "hoge" } }
     end
 
@@ -32,5 +45,58 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     expect(res[:status]).to eq(:fail)
   end
 
+  it "serviceのパラメーターが存在するが:passのパラメーターがない場合は:fail" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+      c.service = { :yammer => { :client_id => "hoge", :user => 'hoge' } }
+    end
 
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+    res = get_oauth_token.execute({})
+    expect(res[:status]).to eq(:fail)
+  end
+
+  it "serviceのパラメーターが存在するが:client_idのパラメーターがない場合は:fail" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+      c.service = { :yammer => { :user => 'hoge', :pass => 'fuga' } }
+    end
+
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+    res = get_oauth_token.execute({})
+    expect(res[:status]).to eq(:fail)
+  end
+
+  it "serviceのパラメーターが存在するが:client_secretのパラメーターがない場合は:fail" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+      c.service = { :yammer => { :user => 'hoge', :pass => 'fuga', :client_id => "client_id" } }
+    end
+
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+    res = get_oauth_token.execute({})
+    expect(res[:status]).to eq(:fail)
+  end
+
+  it "必須パラメーターが全て存在する" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+    end
+
+    Eventaskbot::Configurable::Merge.config_file({})
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+    res = get_oauth_token.execute({})
+    expect(res[:status]).to eq(:ok)
+  end
 end
