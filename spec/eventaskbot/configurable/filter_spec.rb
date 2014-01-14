@@ -40,7 +40,7 @@ describe Eventaskbot::Configurable::Filter, "Eventaskbot Configurable Filter Mod
     end
     
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
-    pp Eventaskbot::Api::Auth.options
+    #pp Eventaskbot::Api::Auth.options
   end
 
 end

@@ -45,7 +45,9 @@ module Eventaskbot
           service.inject({}) do | h,(k,v) |
             h[k] = v
             klass_name = api_name.to_s.split("_").map(&:capitalize).join("")
-            h[k][:klass] = "Eventaskbot::Services::#{k.capitalize}::#{klass_name}"
+
+            require "eventaskbot/services/#{k}/#{api_name}"
+            h[k][:klass] = eval "Eventaskbot::Services::#{k.capitalize}::#{klass_name}.new"
             h
           end
 
