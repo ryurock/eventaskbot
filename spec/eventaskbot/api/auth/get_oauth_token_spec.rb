@@ -6,7 +6,6 @@ plugins_path = File.expand_path('../../../../../plugins', __FILE__)
 $LOAD_PATH.unshift(plugins_path) unless $LOAD_PATH.include?(plugins_path)
 require 'eventaskbot'
 require 'eventaskbot/api/auth/get_oauth_token'
-require 'eventaskbot-yammer-plugins/yammer'
 
 describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-token API Class" do
   before(:each) do
@@ -100,7 +99,7 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     expect(res[:status]).to eq(:ok)
   end
 
-  it "必須パラメーターが全て存在するが値が正しくない場合はfalse" do
+  it "必須パラメーターが全て存在するが値が正しくない場合は:fail" do
     Eventaskbot.configure do |c|
       c.api = { :name => "get-oauth-token", :type => :auth }
       c.response = { :format => "json" }
@@ -108,10 +107,10 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
 
     Eventaskbot::Configurable::Merge.config_file({})
     opts = Eventaskbot.options
-    opts[:service][:yammer][:client_id] = "faile"
+    opts[:service][:yammer][:client_id] = "fail"
     Eventaskbot::Configurable::Filter.filter(opts)
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({})
-    expect(res[:status]).to eq(:ok)
+    expect(res[:status]).to eq(:fail)
   end
 end
