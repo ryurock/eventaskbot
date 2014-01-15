@@ -87,7 +87,7 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     expect(res[:status]).to eq(:fail)
   end
 
-  it "必須パラメーターが全て存在する" do
+  it "必須パラメーターが全て存在するかつその値が正しい場合は:ok" do
     Eventaskbot.configure do |c|
       c.api = { :name => "get-oauth-token", :type => :auth }
       c.response = { :format => "json" }
@@ -95,6 +95,21 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
 
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
+    res = get_oauth_token.execute({})
+    expect(res[:status]).to eq(:ok)
+  end
+
+  it "必須パラメーターが全て存在するが値が正しくない場合はfalse" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+    end
+
+    Eventaskbot::Configurable::Merge.config_file({})
+    opts = Eventaskbot.options
+    opts[:service][:yammer][:client_id] = "faile"
+    Eventaskbot::Configurable::Filter.filter(opts)
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({})
     expect(res[:status]).to eq(:ok)

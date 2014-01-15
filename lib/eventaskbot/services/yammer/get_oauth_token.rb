@@ -9,7 +9,7 @@ module Eventaskbot
   module Services
     module Yammer
       class GetOauthToken
-        include Capybara::DSL
+        YAM_URL = "https://www.yammer.com"
 
         attr_accessor :client, :res
         def initialize
@@ -19,9 +19,9 @@ module Eventaskbot
         def execute(opts)
           #配列の値をバリデート
           [:user, :pass, :client_id, :client_secret].each{ |v| return @res if validate opts, v }
+
           agent = Mechanize.new
-          agent.user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1539.0 Safari/537.36"
-          page = agent.get('https://www.yammer.com/login')
+          page = agent.get("#{YAM_URL}/login")
 
           page = page.form_with(:id => 'login-form') do |form|
             form.login    = opts[:user]
@@ -30,12 +30,25 @@ module Eventaskbot
 
           #強引だが例外で出たURLをパースしてごまかす
           begin
-            page = agent.get("https://www.yammer.com/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
+            page = agent.get("#{YAM_URL}/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
           rescue Mechanize::ResponseCodeError => ex
-            pp URI.extract(ex.message)[1]
+            url  = URI.extract(ex.message)[1]
+            code = CGI.parse(URI.parse(url).query)["code"][0]
           end
-          @res[:status] = :ok
-          @res
+
+          if code.nil?
+            @res[:message] = "[Failed] dialog/oauth try get code. but failed"
+            return @res
+          end
+
+          page = agent.get("#{YAM_URL}/oauth2/access_token.json?client_id=#{opts[:client_id]}&client_secret=#{opts[:client_secret]}&code=#{code}")
+          json = MultiJson.load(page.body, :symbolize_keys => true)
+
+          @res = {
+            :status  => :ok,
+            :message => "[Success] oauth token is #{json[:access_token][:token]}",
+            :response => json[:access_token][:token]
+          }
         end
 
         #
