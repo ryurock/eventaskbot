@@ -15,9 +15,9 @@ describe Eventaskbot::Configurable, "Eventaskbot Configurable Class" do
   end
 
   it "インスタンス変数が代入されている事を確認する" do
-    assert = :@plugin_dir
+    assert = :@service
     Eventaskbot.configure do |v|
-      v.plugin_dir = "hoge"
+      v.service = "hoge"
     end
 
     expect(Eventaskbot.instance_variables.index(assert)).not_to eq(nil)
@@ -34,15 +34,15 @@ describe Eventaskbot::Configurable, "Eventaskbot Configurable Class" do
   it "設定したインスタンス変数が取得できる" do
     assert = "hoge"
     Eventaskbot.configure do |v|
-      v.plugin_dir = assert
+      v.service = assert
     end
 
-    expect(Eventaskbot.options[:plugin_dir]).to eq(assert)
+    expect(Eventaskbot.options[:service]).to eq(assert)
   end
 
   it "keysメソッドで一覧が取得できる" do
     Eventaskbot.configure do |v|
-      v.plugin_dir = "hoge"
+      v.service = "hoge"
     end
 
     expect(Eventaskbot.keys.size).to be >= 1
@@ -52,10 +52,10 @@ describe Eventaskbot::Configurable, "Eventaskbot Configurable Class" do
     assert = nil
 
     Eventaskbot.configure do |v|
-      v.plugin_dir = "hoge"
+      v.service = "hoge"
     end
 
     Eventaskbot.reset
-    expect(Eventaskbot.options[:plugin_dir]).to eq(assert)
+    expect(Eventaskbot.options[:service]).to eq(assert)
   end
 end

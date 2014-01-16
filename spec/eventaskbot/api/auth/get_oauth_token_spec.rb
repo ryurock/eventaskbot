@@ -96,6 +96,7 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({})
+    pp res
     expect(res[:status]).to eq(:ok)
   end
 

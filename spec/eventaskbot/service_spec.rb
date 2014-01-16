@@ -14,7 +14,6 @@ describe Eventaskbot::Service, "Eventaskbot Service Class" do
       c.service = { :yammer => { :client_id => "hoge", :client_secret => "fuga" } }
       c.config_file = {:path => "EvetnaskbotFile"}
       c.response = nil
-      c.plugin_dir = nil
     end
     Eventaskbot::Api::Auth.reset
   end
