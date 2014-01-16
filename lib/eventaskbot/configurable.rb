@@ -8,7 +8,7 @@ module Eventaskbot
 
     include Merge
 
-    attr_accessor :storage, :service,:use_service, :response, :api, :config_file
+    attr_accessor :storage, :service,:use_service, :response, :api, :config_file, :notify
 
     #
     # 設定をマージする
