@@ -10,18 +10,23 @@ module Eventaskbot
           opts = Auth.option(:get_oauth_token)
           @res = {:status => :fail, :message => ""}
 
-          if opts.nil?
+          if opts.nil? || opts.key?(:service) == false
             @res[:message] = "[Failed] Setting service parametor not found"
             return @res
           end
 
-          opts.each do |service_name, v|
+          opts[:service].each do |service_name, v|
             unless v.key?(:klass)
               @res[:message] = "[Failed] service Class not found"
               return @res
             end
 
             @res = v[:klass].execute(v)
+          end
+
+          return @res if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false
+
+          opts[:notify].each do |k,v|
           end
 
           @res

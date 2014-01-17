@@ -25,19 +25,28 @@ module Eventaskbot
         raise "options :api not found."       unless options.key?(:api)
         raise "options :response not found."  unless options.key?(:response)
 
-        options[:api]      = Api.filter(options[:api])
+        options[:api] = Api.filter(options[:api])
         Eventaskbot.configure { |c| c.api = options[:api] }
 
-        options[:service] = Service.filter
         api_type = Eventaskbot.options[:api][:type]
         api_name = Eventaskbot.options[:api][:name].gsub(/-/,"_")
-        Service.sub_conf_instance_get(api_type).instance_variable_set("@#{api_name}", options[:service])
 
-        options[:response] = Response.filter(options[:response])
-        Eventaskbot.configure { |c| c.response = options[:response] }
+        api_type_opts = {}
+
+        options[:service] = Service.filter
+
+        api_type_opts           = Service.sub_conf_instance_get(api_type).options[api_name.to_sym]
+        api_type_opts           = {} if api_type_opts.nil?
+        api_type_opts[:service] = options[:service]
 
         options[:notify] = Notify.filter
         Eventaskbot.configure { |c| c.notify = options[:notify] }
+        api_type_opts[:notify] = options[:notify]
+
+        Service.sub_conf_instance_get(api_type).instance_variable_set("@#{api_name}", api_type_opts)
+
+        options[:response] = Response.filter(options[:response])
+        Eventaskbot.configure { |c| c.response = options[:response] }
 
         options
       end

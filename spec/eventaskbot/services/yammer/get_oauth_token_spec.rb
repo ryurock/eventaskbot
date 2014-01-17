@@ -64,7 +64,7 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
 
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
-    opts = Eventaskbot::Api::Auth.options[:get_oauth_token][:yammer]
+    opts = Eventaskbot::Api::Auth.options[:get_oauth_token][:service]
 
     yam = Eventaskbot::Services::Yammer::GetOauthToken.new
     res = yam.execute(opts)

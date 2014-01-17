@@ -67,12 +67,17 @@ module Eventaskbot
         # @return true バリデートでブロックした | false バリデート通過
         #
         def validate(opts, key)
-          unless opts.key? key
-            @res[:message] = "[Failed] parametor or EventaskbotFile Setting #{key} => #{key} is not found"
+          if opts.nil?
+            @res[:message] = "[Failed] parametor or EventaskbotFile Setting is not found"
             @res[:status] = :fail
             return true
           end
 
+          if opts[:yammer].key?(key) == false
+            @res[:message] = "[Failed] parametor or EventaskbotFile Setting #{key} => #{key} is not found"
+            @res[:status] = :fail
+            return true
+          end
           @res[:status] = :ok
           false
         end
