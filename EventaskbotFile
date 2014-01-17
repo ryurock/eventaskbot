@@ -5,12 +5,16 @@ Eventaskbot::Api::Auth.configure do |c|
 # Auth API add setting
 # example
 # c.get_oauth_token = {
-#    :service => {
-#       :yammer => {
-#         :user => "your login name",
-#         :pass => "your login pass"
+#   :service => {
+#      :yammer => {
+#        :user => "your login name",
+#        :pass => "your login pass"
 #       }
+#    }
+#     :notify => {
+#       :prehook => false # notify prehook overrideen
 #     }
+#
 # }
 end
 
@@ -31,6 +35,11 @@ Eventaskbot::Api::Collector.configure do |c|
 end
 
 Eventaskbot.configure do |c|
+  c.notify = {
+    :prehook   => true, # notify configurable prehook notify
+    :afterhook => true, # notify configurable afterhook notify
+    :service   => [:yammer]
+  }
   c.service = {
     :yammer => {}
   }
