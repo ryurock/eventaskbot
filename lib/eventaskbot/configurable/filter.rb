@@ -1,5 +1,6 @@
 require 'eventaskbot/configurable/filter/api'
 require 'eventaskbot/configurable/filter/service'
+require 'eventaskbot/configurable/filter/notify'
 require 'eventaskbot/configurable/filter/response'
 
 #
@@ -12,6 +13,7 @@ module Eventaskbot
       include Api
       include Service
       include Response
+      include Notify
 
       #
       # フィルター
@@ -33,6 +35,9 @@ module Eventaskbot
 
         options[:response] = Response.filter(options[:response])
         Eventaskbot.configure { |c| c.response = options[:response] }
+
+        options[:notify] = Notify.filter
+        Eventaskbot.configure { |c| c.notify = options[:notify] }
 
         options
       end

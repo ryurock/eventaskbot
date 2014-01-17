@@ -68,4 +68,16 @@ describe Eventaskbot::Handler, "Eventaskbot Handler Module" do
     Eventaskbot.run
     expect(Eventaskbot.options[:service].class).to eq(Hash)
   end
+
+  it "notifyを設定した場合はnotifyにHashが入る" do
+    Eventaskbot.configure do |c|
+      c.api = {:name => 'get-oauth-token'}
+      c.service = {:yammer => {}}
+      c.response = {:format => "json"}
+      c.notify = {:service => [:yammer] }
+    end
+
+    Eventaskbot.run
+    expect(Eventaskbot.options[:notify].class).to eq(Hash)
+  end
 end
