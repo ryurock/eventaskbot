@@ -15,19 +15,15 @@ module Eventaskbot
             return @res
           end
 
-          opts[:service].each do |service_name, v|
-            unless v.key?(:klass)
-              @res[:message] = "[Failed] service Class not found"
-              return @res
-            end
 
+          opts[:service].each do |service_name, v|
             @res = v[:klass].execute(v)
           end
 
-          return @res if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false
+          #return @res if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false
 
-          opts[:notify].each do |k,v|
-          end
+          #opts[:notify].each do |k,v|
+          #end
 
           @res
         end

@@ -67,7 +67,10 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
     opts = Eventaskbot::Api::Auth.options[:get_oauth_token][:service]
 
     yam = Eventaskbot::Services::Yammer::GetOauthToken.new
-    res = yam.execute(opts)
-    expect(res[:status]).to eq(:ok)
+
+    opts.each do |service,v|
+      res = yam.execute(v)
+      expect(res[:status]).to eq(:ok)
+    end
   end
 end

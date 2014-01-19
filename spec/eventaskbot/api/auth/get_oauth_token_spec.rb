@@ -62,10 +62,10 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     end
 
     Eventaskbot::Configurable::Merge.config_file({})
-    pp Eventaskbot::Api::Auth.options
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({})
+
     expect(res[:status]).to eq(:ok)
   end
 
@@ -84,17 +84,4 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     expect(res[:status]).to eq(:fail)
   end
 
-  it "必須パラメーターが全て存在するが値が正しくない場合は:fail" do
-    Eventaskbot.configure do |c|
-      c.api = { :name => "get-oauth-token", :type => :auth }
-      c.response = { :format => "json" }
-    end
-
-    Eventaskbot::Configurable::Merge.config_file({})
-    opts = Eventaskbot.options
-    Eventaskbot::Configurable::Filter.filter(opts)
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute({})
-    expect(res[:status]).to eq(:fail)
-  end
 end
