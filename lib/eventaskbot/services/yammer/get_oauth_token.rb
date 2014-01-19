@@ -36,7 +36,7 @@ module Eventaskbot
             form.password = opts[:pass]
           end.submit
 
-          #強引だが例外で出たURLをパースしてごまかす
+          #強引だが例外で出たURLをパースしてごまかす(なのでredirect_urlが正常に返ってくるapiコードは取得できない)
           begin
             page = @client.get("#{YAM_URL}/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
           rescue Mechanize::ResponseCodeError => ex
