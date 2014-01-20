@@ -1,5 +1,8 @@
 #! /usr/bin/env ruby
 
+require 'redis'
+require 'hiredis'
+
 # Auth API setting
 Eventaskbot::Api::Auth.configure do |c|
 # Auth API add setting
@@ -44,5 +47,5 @@ Eventaskbot.configure do |c|
     :yammer => {}
   }
   # storage Setting default Storage is Redis
-  c.storage = {:driver => :redis}
+  c.storage = { :driver => Redis.new(:host => '127.0.0.1', :port => "6379", driver: :hiredis) }
 end

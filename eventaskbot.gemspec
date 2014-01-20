@@ -29,4 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "term-ansicolor"
   spec.add_development_dependency "mechanize"
   spec.add_development_dependency "yammer"
+  spec.add_development_dependency "webmock"
+  spec.add_development_dependency "redis"
+  spec.add_development_dependency "hiredis"
 end
