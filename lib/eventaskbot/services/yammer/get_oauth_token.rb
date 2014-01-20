@@ -1,6 +1,9 @@
 require "uri"
 require "yammer"
 require "mechanize"
+require 'redis'
+require 'hiredis'
+require 'terminal-table'
 
 #
 # Plugins Yammer Module
@@ -16,7 +19,6 @@ module Eventaskbot
 
         def initialize
           @res    = {:status => :fail, :message => ""}
-
           @client = Mechanize.new
         end
 
@@ -53,9 +55,16 @@ module Eventaskbot
           page = @client.get("#{YAM_URL}/oauth2/access_token.json?client_id=#{opts[:client_id]}&client_secret=#{opts[:client_secret]}&code=#{code}")
           json = MultiJson.load(page.body, :symbolize_keys => true)
 
+          rows = []
+          rows << [json[:access_token][:token]]
+          table = Terminal::Table.new :headings => ['access_token'], :rows => rows
+
+          message = "[Success] oauth token get\n"
+          message << "#{table}"
+
           @res = {
             :status  => :ok,
-            :message => "[Success] oauth token is #{json[:access_token][:token]}",
+            :message => message,
             :response => json[:access_token][:token]
           }
         end

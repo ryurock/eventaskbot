@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "whenever"
   spec.add_development_dependency "multi_json"
   spec.add_development_dependency "term-ansicolor"
+  spec.add_development_dependency "terminal-table"
   spec.add_development_dependency "mechanize"
   spec.add_development_dependency "yammer"
   spec.add_development_dependency "webmock"
