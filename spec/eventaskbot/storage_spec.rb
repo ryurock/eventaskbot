@@ -9,6 +9,9 @@ require 'eventaskbot/storage'
 
 describe Eventaskbot::Storage, "Eventaskbot Storage Class" do
   before(:each) do
+    Eventaskbot::Configurable::Merge.config_file({})
+    driver = Eventaskbot.options[:storage][:driver]
+    driver.del("test_oauth_token")
     Eventaskbot.reset
     Eventaskbot::Api::Auth.reset
     Eventaskbot::Storage::Driver.set(nil)
@@ -34,5 +37,27 @@ describe Eventaskbot::Storage, "Eventaskbot Storage Class" do
     Eventaskbot::Configurable::Merge.config_file({})
     storage = Eventaskbot::Storage.register_driver( { :driver => :test })
     expect(storage.driver).to eq(:test)
+  end
+
+  it "データのないキーをアクセスした場合はnil" do
+    Eventaskbot::Configurable::Merge.config_file({})
+    storage = Eventaskbot::Storage.register_driver
+    expect(storage.get("hogehoge")).to eq(nil)
+  end
+
+  it "データのあるキーをアクセスした場合" do
+    Eventaskbot::Configurable::Merge.config_file({})
+    driver = Eventaskbot.options[:storage][:driver]
+    driver.set("test_oauth_token", "hoge")
+    storage = Eventaskbot::Storage.register_driver
+    expect(storage.get("test_oauth_token")).to eq("hoge")
+  end
+
+  it "データを削除できるか？" do
+    Eventaskbot::Configurable::Merge.config_file({})
+    driver = Eventaskbot.options[:storage][:driver]
+    driver.set("test_oauth_token", "hoge")
+    storage = Eventaskbot::Storage.register_driver
+    expect(storage.del("test_oauth_token")).to eq(1)
   end
 end

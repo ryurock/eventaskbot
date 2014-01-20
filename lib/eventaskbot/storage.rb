@@ -36,5 +36,22 @@ module Eventaskbot
      false
     end
 
+    #
+    # ストレージからデータを取得
+    # @param key[String] 取得したいキー名
+    # @return [Mixin] ストレージのデータ
+    #
+    def self.get(key)
+     self.driver.get(key)
+    end
+
+    #
+    # ストレージからデータを削除
+    # @param key[String] 削除したいキー名
+    # @return Boolean true 削除に成功 | false 削除に失敗
+    #
+    def self.del(key)
+     self.driver.del(key)
+    end
   end
 end
