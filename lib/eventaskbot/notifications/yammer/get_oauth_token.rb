@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require "uri"
 require "yammer"
 
@@ -22,37 +24,29 @@ module Eventaskbot
         #
         def execute(opts)
           #配列の値をバリデート
-          [:user, :pass, :client_id, :client_secret].each{ |v| return @res if validate opts, v }
+          [:client_id, :client_secret, :access_token].each{ |v| return @res if validate opts, v }
 
-          page = @client.get("#{YAM_URL}/login")
-
-          page = page.form_with(:id => 'login-form') do |form|
-            form.login    = opts[:user]
-            form.password = opts[:pass]
-          end.submit
-
-          #強引だが例外で出たURLをパースしてごまかす
-          begin
-            page = @client.get("#{YAM_URL}/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
-          rescue Mechanize::ResponseCodeError => ex
-            url  = URI.extract(ex.message)[1]
-            code = CGI.parse(URI.parse(url).query)["code"][0]
+          ::Yammer.configure do |c|
+            c.client_id = opts[:client_id]
+            c.client_secret = opts[:client_secret]
+            c.access_token = opts[:access_token]
           end
 
-          if code.nil?
-            @res[:message] = "[Failed] dialog/oauth try get code. but failed"
-            @res[:status]  = :fail
+          api_res = ::Yammer.all_groups
+
+          unless api_res.code == 200
+            @res[:message] = "[Failed] notification is failed. all_groups"
+            @res[:status] = :fail
             return @res
           end
 
-          page = @client.get("#{YAM_URL}/oauth2/access_token.json?client_id=#{opts[:client_id]}&client_secret=#{opts[:client_secret]}&code=#{code}")
-          json = MultiJson.load(page.body, :symbolize_keys => true)
-
-          @res = {
-            :status  => :ok,
-            :message => "[Success] oauth token is #{json[:access_token][:token]}",
-            :response => json[:access_token][:token]
-          }
+          api_res.body.each do |v|
+            unless opts[:group][:yammer].index(v[:name].to_sym).nil?
+              group_id = v[:id]
+              ::Yammer.create_message("Yammerのトークン情報を最新に更新しました", { :group_id => group_id })
+              break
+            end
+          end
         end
 
         #

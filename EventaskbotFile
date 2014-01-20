@@ -42,6 +42,7 @@ Eventaskbot.configure do |c|
     :prehook   => true, # notify configurable prehook notify
     :afterhook => true, # notify configurable afterhook notify
     :service   => [:yammer]
+    :group     => { :yammer => [:your_yammer_default_post_groups]}
   }
   c.service = {
     :yammer => {}

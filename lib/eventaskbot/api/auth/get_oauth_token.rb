@@ -33,29 +33,43 @@ module Eventaskbot
 
             #tokenの差分を確認したい時
             if params.key?(:diff_token)
-              old_token = storage.get(key)
-
-              rows = []
-              rows << ["old_access_token", old_token]
-              rows << ["new_access_token", value]
-              table = Terminal::Table.new :rows => rows
-
-              message = "[Success] access_token diff is\n"
-              message << "#{table}"
-              @res[:message] = message
-              @res[:response] = {:old_access_token => old_token, :new_access_token => value}
+              diff_execute(key, value, storage)
             end
 
             storage.set(key, value)
 
+            next if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false || opts[:notify][:klass].key?(service_name) == false
+
+            notify_opts = v
+            notify_opts[:access_token] = value
+            notify_opts = notify_opts.merge(opts[:notify])
+
+            #notification
+            opts[:notify][:klass][service_name].execute(notify_opts)
           end
 
-          #return @res if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false
+
+
 
           #opts[:notify].each do |k,v|
           #end
 
           @res
+        end
+
+        def diff_execute(key, value, storage)
+           old_token = storage.get(key)
+
+           rows = []
+           rows << ["old_access_token", old_token]
+           rows << ["new_access_token", value]
+           table = Terminal::Table.new :rows => rows
+
+           message = "[Success] access_token diff is\n"
+           message << "#{table}"
+           @res[:message] = message
+           @res[:response] = {:old_access_token => old_token, :new_access_token => value}
+           return @res
         end
       end
     end
