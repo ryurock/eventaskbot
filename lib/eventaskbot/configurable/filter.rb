@@ -1,6 +1,7 @@
 require 'eventaskbot/configurable/filter/api'
 require 'eventaskbot/configurable/filter/service'
 require 'eventaskbot/configurable/filter/notify'
+require 'eventaskbot/configurable/filter/storage'
 require 'eventaskbot/configurable/filter/response'
 
 #
@@ -42,6 +43,10 @@ module Eventaskbot
         options[:notify] = Notify.filter
         Eventaskbot.configure { |c| c.notify = options[:notify] }
         api_type_opts[:notify] = options[:notify]
+
+        options[:storage] = Storage.filter
+        Eventaskbot.configure { |c| c.storage = options[:storage] }
+        api_type_opts[:storage] = options[:storage]
 
         Service.sub_conf_instance_get(api_type).instance_variable_set("@#{api_name}", api_type_opts)
 
