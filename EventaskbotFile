@@ -43,4 +43,6 @@ Eventaskbot.configure do |c|
   c.service = {
     :yammer => {}
   }
+  # storage Setting default Storage is Redis
+  c.storage = {:driver => :redis}
 end
