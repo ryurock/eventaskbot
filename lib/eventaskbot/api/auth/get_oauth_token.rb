@@ -90,7 +90,7 @@ module Eventaskbot
            table = Terminal::Table.new :rows => rows
 
            message = "[Success] access_token diff is\n"
-           message << "#{table}"
+           message << "#{table}\n"
            @res[:message] = message
            @res[:response] = {:old_access_token => old_token, :new_access_token => value}
            return @res

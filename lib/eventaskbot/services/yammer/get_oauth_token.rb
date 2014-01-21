@@ -60,7 +60,7 @@ module Eventaskbot
           table = Terminal::Table.new :headings => ['access_token'], :rows => rows
 
           message = "[Success] oauth token get\n"
-          message << "#{table}"
+          message << "#{table}\n"
 
           @res = {
             :status  => :ok,
