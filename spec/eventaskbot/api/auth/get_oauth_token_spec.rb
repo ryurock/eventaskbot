@@ -55,22 +55,7 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     expect(res[:status]).to eq(:fail)
   end
 
-  it "必須パラメーターが全て存在するが値が正しくない場合は:fail" do
-    Eventaskbot.configure do |c|
-      c.api = { :name => "get-oauth-token", :type => :auth }
-      c.response = { :format => "json" }
-    end
-
-    Eventaskbot::Configurable::Merge.config_file({})
-    opts = Eventaskbot.options
-    opts[:service][:yammer][:client_id] = "fail"
-    Eventaskbot::Configurable::Filter.filter(opts)
-    get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
-    res = get_oauth_token.execute({})
-    expect(res[:status]).to eq(:fail)
-  end
-
-  it "diffオプション" do
+  it "diffオプションが正しく動作するか？" do
     Eventaskbot.configure do |c|
       c.api = { :name => "get-oauth-token", :type => :auth }
       c.response = { :format => "json" }
@@ -78,6 +63,32 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
 
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    #サービウレイヤーのモック
+    mock = double(Eventaskbot::Services::Yammer::GetOauthToken)
+    mock_val = {
+      :status => :ok,
+      :response => { :token => 'oppopopo' },
+      :message  => 'test'
+    }
+    allow(mock).to receive(:execute).and_return(mock_val)
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = {
+        :service => {
+          :yammer => {
+            :client_id     => 'hoge',
+            :client_secret => 'fuga',
+            :user => 'test',
+            :pass => 'test',
+            :klass => mock
+          }
+        },
+        :storage => Eventaskbot.options[:storage],
+        :notify  => Eventaskbot::Api::Auth.options[:notify]
+      }
+    end
+
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({:diff_token => true})
 
@@ -92,6 +103,35 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
 
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    #サービウレイヤーのモック
+    mock = double(Eventaskbot::Services::Yammer::GetOauthToken)
+    mock_val = {
+      :status => :ok,
+      :response => { :token => 'oppopopo' },
+      :message  => 'test'
+    }
+    allow(mock).to receive(:execute).and_return(mock_val)
+
+    Eventaskbot::Api::Auth.configure do |c|
+      c.get_oauth_token = {
+        :service => {
+          :yammer => {
+            :client_id     => 'hoge',
+            :client_secret => 'fuga',
+            :user => 'test',
+            :pass => 'test',
+            :klass => mock
+          }
+        },
+        :storage => Eventaskbot.options[:storage],
+        :notify  => Eventaskbot::Api::Auth.options[:notify]
+      }
+    end
+
+
+
+
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({})
 

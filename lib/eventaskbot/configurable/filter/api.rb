@@ -25,7 +25,7 @@ module Eventaskbot
 
           raise "options API type not cound" unless opts.key?(:type)
 
-          opts[:klass] = api_load(opts[:name], opts[:type])
+          opts[:klass] = api_load(opts[:name], opts[:type]) unless opts.key?(:klass)
 
           opts
         end

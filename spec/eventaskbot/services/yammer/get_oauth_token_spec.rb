@@ -47,7 +47,6 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
     allow(mock).to receive(:get).and_return(mock)
     allow(mock).to receive(:form_with).and_return(mock)
     allow(mock).to receive(:submit).and_return(mock)
-    allow(mock).to receive(:code).and_return(404)
 
     yam = Eventaskbot::Services::Yammer::GetOauthToken.new
     yam.client = mock
@@ -62,7 +61,6 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
     allow(mock).to receive(:get).and_return(mock)
     allow(mock).to receive(:form_with).and_return(mock)
     allow(mock).to receive(:submit).and_return(mock)
-    allow(mock).to receive(:code).and_return(404)
     allow(mock).to receive(:body).and_return(MultiJson.dump({:access_token => { :token => "aaabbbbcccc" } }))
 
     Eventaskbot.configure do |c|
