@@ -1,5 +1,6 @@
 require 'eventaskbot/storage'
 require 'terminal-table'
+require "eventaskbot/notifications/yammer/create_thread"
 
 #
 # Auth GetOauthToken  API
@@ -11,10 +12,10 @@ module Eventaskbot
         attr_accessor :res
         def execute(params)
           opts = Auth.option(:get_oauth_token)
-          @res = {:status => :fail, :message => ""}
+          @res = {:status => :fail, :message => []}
 
           if opts.nil? || opts.key?(:service) == false
-            @res[:message] = "[Failed] Setting service parametor not found"
+            @res[:message] << "[Failed] Setting service parametor not found"
             return @res
           end
 
@@ -40,21 +41,44 @@ module Eventaskbot
 
             next if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false || opts[:notify][:klass].key?(service_name) == false
 
+
             notify_opts = v
             notify_opts[:access_token] = value
             notify_opts = notify_opts.merge(opts[:notify])
-
-            #notification
-            opts[:notify][:klass][service_name].execute(notify_opts)
+            notify_execute(notify_opts)
           end
 
-
-
-
-          #opts[:notify].each do |k,v|
-          #end
-
           @res
+        end
+
+        #
+        # スレッドの指定がある場合はそのスレッドに対してnotifyない場合は指定されたグループにスレッドを作成する
+        # @param opts[Hash] notifyの設定値
+        # @return nil
+        #
+        def notify_execute(opts)
+          #スレッド指定の場合はスレッドがなければ作成してある場合は参照する
+          if opts.key?(:group) && opts[:group].key?(:yammer)
+            opts[:group][:yammer].each do |v|
+              notify_key_name   = "notify_thread_#{v}"
+              notify_thread_id  = Eventaskbot::Storage.get(notify_key_name)
+
+              #スレッドを作成する
+              if notify_thread_id.nil?
+                thread_res        = Eventaskbot::Notifications::Yammer::CreateThread.new.execute(opts)
+                notify_thread_id  = thread_res[:response].body[:messages][0][:id]
+                storage.set(notify_key_name, notify_thread_id)
+              end
+
+              opts[:thread_id] = notify_thread_id
+            end
+          end
+
+          #notification
+          notify_res = opts[:klass].each do |service_name, v|
+            notify_res = v.execute(opts)
+            @res[:message] << notify_res[:message]
+          end
         end
 
         def diff_execute(key, value, storage)

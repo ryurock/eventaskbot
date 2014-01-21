@@ -4,6 +4,7 @@ require File.expand_path(File.join('../../../', 'spec_helper'), File.dirname(__F
 
 require 'eventaskbot'
 require 'eventaskbot/api/auth/get_oauth_token'
+require 'eventaskbot/notifications/yammer/get_oauth_token'
 
 describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-token API Class" do
   before(:each) do
@@ -64,7 +65,7 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
 
-    #サービウレイヤーのモック
+    #サービスレイヤーのモック
     mock = double(Eventaskbot::Services::Yammer::GetOauthToken)
     mock_val = {
       :status => :ok,
@@ -72,6 +73,13 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
       :message  => 'test'
     }
     allow(mock).to receive(:execute).and_return(mock_val)
+
+    #notifyのモック
+    mock_yam = double(Eventaskbot::Notifications::Yammer::GetOauthToken)
+    allow(mock_yam).to receive(:execute).and_return(mock_val)
+    notify_opts = Eventaskbot.options[:notify]
+    notify_opts[:klass][:yammer] = mock_yam
+
 
     Eventaskbot::Api::Auth.configure do |c|
       c.get_oauth_token = {
@@ -85,10 +93,9 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
           }
         },
         :storage => Eventaskbot.options[:storage],
-        :notify  => Eventaskbot::Api::Auth.options[:notify]
+        :notify  => notify_opts
       }
     end
-
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({:diff_token => true})
 
@@ -103,8 +110,8 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
 
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
-
-    #サービウレイヤーのモック
+# ここからコメントアウトすると実際にYammerとかに発射される
+    #サービスレイヤーのモック
     mock = double(Eventaskbot::Services::Yammer::GetOauthToken)
     mock_val = {
       :status => :ok,
@@ -112,6 +119,13 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
       :message  => 'test'
     }
     allow(mock).to receive(:execute).and_return(mock_val)
+
+    #notifyのモック
+    mock_yam = double(Eventaskbot::Notifications::Yammer::GetOauthToken)
+    allow(mock_yam).to receive(:execute).and_return(mock_val)
+    notify_opts = Eventaskbot.options[:notify]
+    notify_opts[:klass][:yammer] = mock_yam
+
 
     Eventaskbot::Api::Auth.configure do |c|
       c.get_oauth_token = {
@@ -125,12 +139,10 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
           }
         },
         :storage => Eventaskbot.options[:storage],
-        :notify  => Eventaskbot::Api::Auth.options[:notify]
+        :notify  => notify_opts
       }
     end
-
-
-
+# ここまで
 
     get_oauth_token  = Eventaskbot::Api::Auth::GetOauthToken.new
     res = get_oauth_token.execute({})

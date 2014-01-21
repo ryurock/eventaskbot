@@ -2,7 +2,6 @@
 
 require "uri"
 require "yammer"
-require "eventaskbot/notifications/yammer/create_thread"
 
 #
 # Plugins Yammer Module
@@ -10,7 +9,7 @@ require "eventaskbot/notifications/yammer/create_thread"
 module Eventaskbot
   module Notifications
     module Yammer
-      class GetOauthToken
+      class CreateThread
 
         attr_accessor :client, :res, :prehook, :afterhook
 
@@ -25,18 +24,8 @@ module Eventaskbot
         #
         def execute(opts)
           #配列の値をバリデート
-          [:client_id, :client_secret, :access_token].each{ |v| return @res if validate opts, v }
+          [:access_token].each{ |v| return @res if validate opts, v }
           @client = ::Yammer::Client.new(:access_token => opts[:access_token])
-
-          params  = {}
-
-          if opts.key?(:thread_id)
-            params[:replied_to_id] = opts[:thread_id]
-            @client.create_message("Yammerのトークン情報を最新に更新しました", params)
-            @res[:message] = "[Success] notification is API get-oauth-token"
-            @res[:status] = :ok
-            return @res
-          end
 
           api_res = @client.all_groups
 
@@ -49,12 +38,10 @@ module Eventaskbot
           api_res.body.each do |v|
             unless opts[:group][:yammer].index(v[:name].to_sym).nil?
               group_id = v[:id]
-              params = { :group_id => group_id }
-              params[:replied_to_id] = opts[:thread_id] if opts.key?(:thread_id)
-
-              @client.create_message("Yammerのトークン情報を最新に更新しました", params)
-              @res[:message] = "[Success] notification is API get-oauth-token"
-              @res[:status] = :ok
+              res = @client.create_message("このスレッドはeventaskbotの通知スレッドになります", { :group_id => group_id })
+              @res[:message]  = "[Success] create Thread is #{v[:name]}"
+              @res[:status]   = :ok
+              @res[:response] = res
               return @res
             end
           end
