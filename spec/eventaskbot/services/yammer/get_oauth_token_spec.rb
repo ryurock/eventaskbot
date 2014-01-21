@@ -49,7 +49,6 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
     allow(mock).to receive(:submit).and_return(mock)
     allow(mock).to receive(:code).and_return(404)
 
-
     yam = Eventaskbot::Services::Yammer::GetOauthToken.new
     yam.client = mock
     res = yam.execute(opts)
@@ -57,6 +56,15 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
   end
 
   it "codeが上手く取得できた場合" do
+    #モック
+    mock = double(Mechanize)
+
+    allow(mock).to receive(:get).and_return(mock)
+    allow(mock).to receive(:form_with).and_return(mock)
+    allow(mock).to receive(:submit).and_return(mock)
+    allow(mock).to receive(:code).and_return(404)
+    allow(mock).to receive(:body).and_return(MultiJson.dump({:access_token => { :token => "aaabbbbcccc" } }))
+
     Eventaskbot.configure do |c|
       c.api = { :name => "get-oauth-token", :type => :auth }
       c.response = { :format => "json" }
@@ -67,6 +75,8 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
     opts = Eventaskbot::Api::Auth.options[:get_oauth_token][:service]
 
     yam = Eventaskbot::Services::Yammer::GetOauthToken.new
+    yam.client = mock
+    yam.code = "hoge"
 
     opts.each do |service,v|
       res = yam.execute(v)

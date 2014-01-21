@@ -15,7 +15,7 @@ module Eventaskbot
         #Yammer URL
         YAM_URL = "https://www.yammer.com"
 
-        attr_accessor :client, :res
+        attr_accessor :client, :res, :code
 
         def initialize
           @res    = {:status => :fail, :message => ""}
@@ -43,10 +43,10 @@ module Eventaskbot
             page = @client.get("#{YAM_URL}/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
           rescue Mechanize::ResponseCodeError => ex
             url  = URI.extract(ex.message)[1]
-            code = CGI.parse(URI.parse(url).query)["code"][0]
+            @code = CGI.parse(URI.parse(url).query)["code"][0]
           end
 
-          if code.nil?
+          if @code.nil?
             @res[:message] = "[Failed] dialog/oauth try get code. but failed"
             @res[:status]  = :fail
             return @res
