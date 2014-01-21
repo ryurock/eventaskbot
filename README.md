@@ -179,8 +179,11 @@ mechanizeの仕様上アクセスしたURLを取得できないので、Redirect
 :client_secret | o | text | none | access_tokenの取得に必要なclient_secret
 :user | o | text | none | サービスのuser_id(Email)
 :pass | o | text | none | サービスのpassword
+:watch_token | x | boolean | false | 現在のtoken情報を確認します（内部ストレージにtokenは保存されません)またnotifyもされません
+:diff_token | x | boolean | false | 現在内部ストレージに保存されているデータと実際の外部サービスのトークンデータを差分表示します
 
-上記パラメーターはEventaskbotFileに記載しておけば設定を読みにいきます。 
+
+上記必須パラメーター[:client_id,:client_secret,:user,:pass]はEventaskbotFileに記載しておけば自動で設定を読みにいきます。 
 
 #### Example
 
@@ -216,22 +219,38 @@ end
 * tokenを取得してStorageに保存します
  
 ```
-eventaskbot get-oauth-token
-[Success] token Update. And Storage Saves.
+get-oauth-token
+[Success] oauth token get
++------------------------+
+| access_token           |
++------------------------+
+| xxxxxxxxxxx            |
++------------------------+
+[Success] notification is API get-oauth-token
 ```
 
-* 現在の最新のtokenを閲覧します
+* 現在の使用しているtokenを閲覧します
  
 ```
-eventaskbot get-oauth-token '{ :watch_token => true }
-[Success] token is xxxxxxxx
+eventaskbot get-oauth-token '{:watch_token => true}'
+[Success] oauth token get
++------------------------+
+| access_token           |
++------------------------+
+| xxxxxxxxxxx            |
++------------------------+
 ```
 
 * ストレージに保存してあるtokenと最新のtokenに差分があるか確認します
  
 ```
-eventaskbot get-oauth-token '{ :diff_token => true }
-[Success] token is different old token is xxxx . new token is xxxx
+eventaskbot get-oauth-token '{:diff_token => true}'
+[Success] access_token diff is
++------------------+------------------------+
+| old_access_token | xxxxxxxxxxxxx |
+| new_access_token | xxxxxxxxxxxxx |
++------------------+------------------------+
+[Success] notification is API get-oauth-token
 ```
 
 ## Contributing
@@ -241,3 +260,4 @@ eventaskbot get-oauth-token '{ :diff_token => true }
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
