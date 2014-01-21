@@ -67,7 +67,7 @@ module Eventaskbot
               if notify_thread_id.nil?
                 thread_res        = Eventaskbot::Notifications::Yammer::CreateThread.new.execute(opts)
                 notify_thread_id  = thread_res[:response].body[:messages][0][:id]
-                storage.set(notify_key_name, notify_thread_id)
+                Eventaskbot::Storage.set(notify_key_name, notify_thread_id)
               end
 
               opts[:thread_id] = notify_thread_id
