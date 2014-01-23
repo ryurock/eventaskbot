@@ -4,6 +4,7 @@ require "mechanize"
 require 'redis'
 require 'hiredis'
 require 'terminal-table'
+require 'eventaskbot/services/yammer'
 
 #
 # Plugins Yammer Module
@@ -12,9 +13,6 @@ module Eventaskbot
   module Services
     module Yammer
       class GetOauthToken
-        #Yammer URL
-        YAM_URL = "https://www.yammer.com"
-
         attr_accessor :client, :res, :code
 
         def initialize
@@ -31,7 +29,7 @@ module Eventaskbot
           #配列の値をバリデート
           [:user, :pass, :client_id, :client_secret].each{ |v| return @res if validate opts, v }
 
-          page = @client.get("#{YAM_URL}/login")
+          page = @client.get("#{Yammer.host}/login")
 
           page = page.form_with(:id => 'login-form') do |form|
             form.login    = opts[:user]
@@ -40,7 +38,7 @@ module Eventaskbot
 
           #強引だが例外で出たURLをパースしてごまかす(なのでredirect_urlが正常に返ってくるapiコードは取得できない)
           begin
-            page = @client.get("#{YAM_URL}/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
+            page = @client.get("#{Yammer.host}/dialog/oauth?client_id=#{opts[:client_id]}&response_type=code")
           rescue Mechanize::ResponseCodeError => ex
             url  = URI.extract(ex.message)[1]
             @code = CGI.parse(URI.parse(url).query)["code"][0]
@@ -52,7 +50,7 @@ module Eventaskbot
             return @res
           end
 
-          page = @client.get("#{YAM_URL}/oauth2/access_token.json?client_id=#{opts[:client_id]}&client_secret=#{opts[:client_secret]}&code=#{code}")
+          page = @client.get("#{Yammer.host}/oauth2/access_token.json?client_id=#{opts[:client_id]}&client_secret=#{opts[:client_secret]}&code=#{code}")
           json = MultiJson.load(page.body, :symbolize_keys => true)
 
           rows = []

@@ -1,7 +1,9 @@
 module Eventaskbot
   module Services
     module Yammer
-      attr_accessor :yam_url
+      def self.host
+        "https://www.yammer.com"
+      end
     end
   end
 end

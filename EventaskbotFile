@@ -3,6 +3,15 @@
 require 'redis'
 require 'hiredis'
 
+# File API setting
+Eventaskbot::Api::File.configure do |c|
+# File/Init API settings
+# example
+# c.init = {
+#   :force_update => false, # force create EventaskbotFile
+# }
+end
+
 # Auth API setting
 Eventaskbot::Api::Auth.configure do |c|
 # Auth API add setting
@@ -18,15 +27,6 @@ Eventaskbot::Api::Auth.configure do |c|
 #       :prehook => false # notify prehook overrideen
 #     }
 #
-# }
-end
-
-# File API setting
-Eventaskbot::Api::File.configure do |c|
-# File/Init API settings
-# example
-# c.init = {
-#   :force_update => false, # force create EventaskbotFile
 # }
 end
 

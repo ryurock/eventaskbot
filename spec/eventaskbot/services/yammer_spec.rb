@@ -13,4 +13,7 @@ describe Eventaskbot::Services::Yammer, "Eventaskbot Services Yammer Module" do
     expect(Eventaskbot::Services::Yammer.class).to eq(Module)
   end
 
+  it "Yammerのホストが返ってくる事" do
+    expect(Eventaskbot::Services::Yammer.host).to eq('https://www.yammer.com')
+  end
 end

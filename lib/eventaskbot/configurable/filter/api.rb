@@ -63,7 +63,7 @@ module Eventaskbot
         # @return [Array] Collector API名の一覧
         #
         def self.collector_api_list
-          ["terget-set", "has-ticket"]
+          ["terget-set", "has-ticket","in-group"]
         end
 
         #

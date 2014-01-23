@@ -31,22 +31,6 @@ describe Eventaskbot::Api::Collector, "Eventaskbot Collector API Module" do
     expect(Eventaskbot::Api::Collector.options[:in_group]).to eq(@assert)
   end
 
-  it "groupの設定を与えても例外にならないこと" do
-    expect{
-      Eventaskbot::Api::Collector.configure do |c|
-        c.group = {:service => [:yammer, :redmine]}
-      end
-    }.to_not raise_error
-  end
-
-  it "groupの設定を与えた値が取得できること" do
-    Eventaskbot::Api::Collector.configure do |c|
-      c.group = @assert
-    end
-
-    expect(Eventaskbot::Api::Collector.options[:group]).to eq(@assert)
-  end
-
   it "usersの設定を与えても例外にならないこと" do
     expect{
       Eventaskbot::Api::Collector.configure do |c|
@@ -62,21 +46,4 @@ describe Eventaskbot::Api::Collector, "Eventaskbot Collector API Module" do
 
     expect(Eventaskbot::Api::Collector.options[:users]).to eq(@assert)
   end
-
-  it "taskの設定を与えても例外にならないこと" do
-    expect{
-      Eventaskbot::Api::Collector.configure do |c|
-        c.task = @assert
-      end
-    }.to_not raise_error
-  end
-
-  it "usersの設定を与えた値が取得できること" do
-    Eventaskbot::Api::Collector.configure do |c|
-      c.task = @assert
-    end
-
-    expect(Eventaskbot::Api::Collector.options[:task]).to eq(@assert)
-  end
-
 end
