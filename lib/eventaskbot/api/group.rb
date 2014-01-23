@@ -1,12 +1,12 @@
 #
-# Collector API Base
+# User API Base
 #
 module Eventaskbot
   module Api
-    module Collector
+    module Group
       class << self
 
-        attr_accessor :in_group, :users
+        attr_accessor :user_import
 
         #
         # 設定をマージする
@@ -45,6 +45,7 @@ module Eventaskbot
         def reset
           instance_variables.each{ |var| instance_variable_set(var, nil) }
         end
+
       end
     end
   end

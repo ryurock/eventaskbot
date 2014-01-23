@@ -7,8 +7,8 @@ require "eventaskbot/notifications/yammer/create_thread"
 #
 module Eventaskbot
   module Api
-    module Collector
-      class InGroup
+    module Group
+      class UserImport
         attr_accessor :res
 
         def execute(params)

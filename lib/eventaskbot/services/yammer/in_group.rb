@@ -5,6 +5,7 @@ require 'redis'
 require 'hiredis'
 require 'terminal-table'
 
+require 'eventaskbot/storage'
 require 'eventaskbot/services/yammer'
 
 #
@@ -27,15 +28,23 @@ module Eventaskbot
         # @return[Hash] レスポンス
         #
         def execute(opts)
-          #pp opts
           #配列の値をバリデート
           [:group].each{ |v| return @res if validate opts, v }
+
+          key     = "access_token_yammer"
+
+          opts    = Eventaskbot.options
+          storage = Eventaskbot::Storage.register_driver(opts[:storage])
+
+          @client = ::Yammer::Client.new(:access_token => storage.get(key)) if @client.nil?
+          #@client.messages_in_group(
+
 
 
           @res = {
             :status  => :ok,
-            :message => "",#message,
-            :response => json[:access_token][:token]
+            #:message => "",#message,
+            #:response => json[:access_token][:token]
           }
         end
 

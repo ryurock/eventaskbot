@@ -86,17 +86,17 @@ describe Eventaskbot::Configurable::Filter::Api, "Eventaskbot configurable filte
     expect(res[:klass].class).to eq(Eventaskbot::Api::Auth::GetOauthToken)
   end
 
-  it "terget-set,has-ticketのAPI種別は:collectorである" do
-    ["terget-set", "has-ticket"].each do |v|
+  it "user-importのAPI種別は:groupである" do
+    ["user-import"].each do |v|
       opts = {:name => v}
 
       res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-      expect(res[:type]).to eq(:collector)
+      expect(res[:type]).to eq(:group)
     end
   end
 
-  it "terget-set,has-ticketのAPI名がレスポンスに入ってる事" do
-    ["terget-set", "has-ticket"].each do |v|
+  it "user-importのAPI名がレスポンスに入ってる事" do
+    ["user-import"].each do |v|
       opts = {:name => v}
 
       res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
@@ -104,14 +104,10 @@ describe Eventaskbot::Configurable::Filter::Api, "Eventaskbot configurable filte
     end
   end
 
-  it "terget-set,has-ticketのAPIインスタンスがレスポンスに入ってる事" do
-    opts = {:name => 'terget-set'}
+  it "user-importのAPIインスタンスがレスポンスに入ってる事" do
+    opts = {:name => 'user-import'}
     res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-    expect(res[:klass].class).to eq(Eventaskbot::Api::Collector::TergetSet)
-
-    opts = {:name => 'has-ticket'}
-    res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-    expect(res[:klass].class).to eq(Eventaskbot::Api::Collector::HasTicket)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::Group::UserImport)
   end
 
   it "filterの戻り値はHash" do

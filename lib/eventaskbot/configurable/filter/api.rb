@@ -19,9 +19,9 @@ module Eventaskbot
           raise "options api name #{opts[:name]} not found."  unless api_exist?(opts[:name])
           opts[:params] = {} unless opts.key?(:params)
 
-          opts[:type]  = :collector unless collector_api_list.index(opts[:name]).nil?
           opts[:type]  = :file      unless file_api_list.index(opts[:name]).nil?
           opts[:type]  = :auth      unless auth_api_list.index(opts[:name]).nil?
+          opts[:type]  = :group unless group_api_list.index(opts[:name]).nil?
 
           raise "options API type not cound" unless opts.key?(:type)
 
@@ -52,7 +52,7 @@ module Eventaskbot
         # @return [Boolean] true 存在する | false 存在しない
         #
         def self.api_exist?(name)
-          return true unless collector_api_list.index(name).nil?
+          return true unless group_api_list.index(name).nil?
           return true unless auth_api_list.index(name).nil?
           return true unless file_api_list.index(name).nil?
           false
@@ -62,8 +62,8 @@ module Eventaskbot
         # Collector APi一覧を返す
         # @return [Array] Collector API名の一覧
         #
-        def self.collector_api_list
-          ["terget-set", "has-ticket","in-group"]
+        def self.group_api_list
+          ["user-import"]
         end
 
         #

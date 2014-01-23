@@ -2,7 +2,7 @@ require 'eventaskbot'
 require 'eventaskbot/configurable'
 require 'eventaskbot/api/file'
 require 'eventaskbot/api/auth'
-require 'eventaskbot/api/collector'
+require 'eventaskbot/api/group'
 
 #
 # 異なる設定方法の設定をマージするモジュール

@@ -30,11 +30,11 @@ Eventaskbot::Api::Auth.configure do |c|
 # }
 end
 
-# Collector API setting
-Eventaskbot::Api::Collector.configure do |c|
-# Collector API add setting
+# Group API setting
+Eventaskbot::Api::Group.configure do |c|
+# Group API add setting
 # example
-# c.in_group = {:service => :yammer, :redmine}
+# c.user_import = {:service => [:yammer, :redmine]}
 end
 
 Eventaskbot.configure do |c|
