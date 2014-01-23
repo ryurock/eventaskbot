@@ -34,7 +34,7 @@ module Eventaskbot
 
             #tokenの差分を確認したい時
             if params.key?(:diff_token)
-              diff_execute(key, value, storage)
+              diff_execute(key, value)
             end
 
             storage.set(key, value)
@@ -81,8 +81,12 @@ module Eventaskbot
           end
         end
 
-        def diff_execute(key, value, storage)
-           old_token = storage.get(key)
+        #
+        #
+        #
+        #
+        def diff_execute(key, value)
+           old_token = Eventaskbot::Storage.get(key)
 
            rows = []
            rows << ["old_access_token", old_token]
