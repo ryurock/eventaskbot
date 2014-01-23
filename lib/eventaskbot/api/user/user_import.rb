@@ -7,12 +7,12 @@ require "eventaskbot/notifications/yammer/create_thread"
 #
 module Eventaskbot
   module Api
-    module Group
+    module User
       class UserImport
         attr_accessor :res
 
         def execute(params)
-          if opts.nil? || opts.key?(:service) == false
+          if opts.nil? || opts.key?(:group) == false
             @res[:message] << "[Failed] Setting service parametor not found"
             return @res
           end

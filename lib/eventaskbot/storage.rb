@@ -46,6 +46,16 @@ module Eventaskbot
     end
 
     #
+    # 通知スレッドグループIDをストレージから取得する
+    # @param service_name[String] サービス名
+    # @param key[Symbol] 取得したいグループ名
+    # @return [Symbol] ストレージのデータ
+    #
+    def self.find_notify_thread_group_id(service_name, group)
+     self.driver.get("notify_thread_id_#{service_name.to_s}_#{group.to_s}")
+    end
+
+    #
     # ストレージからデータを削除
     # @param key[String] 削除したいキー名
     # @return Boolean true 削除に成功 | false 削除に失敗

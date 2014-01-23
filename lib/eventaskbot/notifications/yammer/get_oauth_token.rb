@@ -26,7 +26,7 @@ module Eventaskbot
         def execute(opts)
           #配列の値をバリデート
           [:client_id, :client_secret, :access_token].each{ |v| return @res if validate opts, v }
-          @client = ::Yammer::Client.new(:access_token => opts[:access_token])
+          @client = ::Yammer::Client.new(:access_token => opts[:access_token]) if @client.nil?
 
           params  = {}
 

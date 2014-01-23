@@ -3,7 +3,7 @@
 #
 module Eventaskbot
   module Api
-    module Group
+    module User
       class << self
 
         attr_accessor :user_import

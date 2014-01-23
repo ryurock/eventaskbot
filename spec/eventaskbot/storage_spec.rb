@@ -12,6 +12,7 @@ describe Eventaskbot::Storage, "Eventaskbot Storage Class" do
     Eventaskbot::Configurable::Merge.config_file({})
     driver = Eventaskbot.options[:storage][:driver]
     driver.del("test_oauth_token")
+    driver.del("notify_thread_id_yammer_tech_admin")
     Eventaskbot.reset
     Eventaskbot::Api::Auth.reset
     Eventaskbot::Storage::Driver.set(nil)
@@ -19,12 +20,6 @@ describe Eventaskbot::Storage, "Eventaskbot Storage Class" do
 
   it "モジュールである事の確認" do
     expect(Eventaskbot::Storage.class).to eq(Module)
-  end
-
-  it "デフォルトのドライバーはnil" do
-    opts = { :storage => { :driver => Redis.new(:host => "127.0.0.1", :port => "6379", driver: :hiredis) } }
-    storage = Eventaskbot::Storage.driver
-    expect(storage.nil?).to eq(true)
   end
 
   it "ストレージドライバーの設定なしの場合でもnilにならない" do
@@ -35,6 +30,7 @@ describe Eventaskbot::Storage, "Eventaskbot Storage Class" do
 
   it "ストレージドライバーの設定ありの場合は値が入る" do
     Eventaskbot::Configurable::Merge.config_file({})
+
     storage = Eventaskbot::Storage.register_driver( { :driver => :test })
     expect(storage.driver).to eq(:test)
   end
@@ -51,6 +47,39 @@ describe Eventaskbot::Storage, "Eventaskbot Storage Class" do
     driver.set("test_oauth_token", "hoge")
     storage = Eventaskbot::Storage.register_driver
     expect(storage.get("test_oauth_token")).to eq("hoge")
+  end
+
+  it "データのセットに失敗した場合はfalseを返す" do
+    Eventaskbot::Configurable::Merge.config_file({})
+
+    mock = double(Eventaskbot::Storage::Driver)
+    allow(mock).to receive(:set).and_return("FAIL")
+
+    storage = Eventaskbot::Storage.register_driver({ :driver => mock})
+    expect(storage.set("test_oauth_token", "hoge")).to eq(false)
+  end
+
+  it "データのセットに成功した場合はtrueを返す" do
+    Eventaskbot::Configurable::Merge.config_file({})
+
+    storage = Eventaskbot::Storage.register_driver
+    expect(storage.set("test_oauth_token", "hoge")).to eq(true)
+  end
+
+  it "グループが存在しない場合はnilが返る" do
+    Eventaskbot::Configurable::Merge.config_file({})
+
+    storage = Eventaskbot::Storage.register_driver
+    expect(storage.find_notify_thread_group_id(:yammer,:tech_admin)).to eq(nil)
+  end
+
+  it "グループが存在する場合はnilが返らない" do
+    Eventaskbot::Configurable::Merge.config_file({})
+
+    driver = Eventaskbot.options[:storage][:driver]
+    driver.set('notify_thread_id_yammer_tech_admin', 10)
+    storage = Eventaskbot::Storage.register_driver
+    expect(storage.find_notify_thread_group_id(:yammer,:tech_admin)).not_to eq(nil)
   end
 
   it "データを削除できるか？" do

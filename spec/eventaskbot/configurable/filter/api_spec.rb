@@ -86,12 +86,12 @@ describe Eventaskbot::Configurable::Filter::Api, "Eventaskbot configurable filte
     expect(res[:klass].class).to eq(Eventaskbot::Api::Auth::GetOauthToken)
   end
 
-  it "user-importのAPI種別は:groupである" do
+  it "user-importのAPI種別は:userである" do
     ["user-import"].each do |v|
       opts = {:name => v}
 
       res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-      expect(res[:type]).to eq(:group)
+      expect(res[:type]).to eq(:user)
     end
   end
 
@@ -107,7 +107,7 @@ describe Eventaskbot::Configurable::Filter::Api, "Eventaskbot configurable filte
   it "user-importのAPIインスタンスがレスポンスに入ってる事" do
     opts = {:name => 'user-import'}
     res  = Eventaskbot::Configurable::Filter::Api.filter(opts)
-    expect(res[:klass].class).to eq(Eventaskbot::Api::Group::UserImport)
+    expect(res[:klass].class).to eq(Eventaskbot::Api::User::UserImport)
   end
 
   it "filterの戻り値はHash" do
