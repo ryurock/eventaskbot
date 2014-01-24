@@ -8,6 +8,7 @@ require 'eventaskbot/notifications/yammer/create_thread'
 
 describe Eventaskbot::Notifications::Yammer::CreateThread, "Eventaskbot notifications executable on Yammer Module" do
   before(:each) do
+    Eventaskbot.reset
   end
 
   it "クラスである事の確認" do

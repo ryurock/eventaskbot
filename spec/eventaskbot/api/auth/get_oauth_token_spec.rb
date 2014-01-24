@@ -15,9 +15,14 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
       class Eventaskbot::Notifications::Yammer::CreateThread
         def self.mock!(opts)
           include MockExt
+          alias_method :old_execute, :execute
           alias_method :execute, :mock_execute
         end
 
+        def self.unmock!(opts)
+          return unless method_defined? :mock_execute
+          alias_method :execute, :old_execute # 別名で定義したold_sayにsayという別名をつける
+        end
         module MockExt
           def mock_execute(opts)
             { :response => MockMethod }
@@ -51,6 +56,10 @@ describe Eventaskbot::Api::Auth::GetOauthToken, "Eventaskbot Auth get-oauth-toke
         }
       end
     end
+  end
+
+  after(:each) do
+    Eventaskbot::Notifications::Yammer::CreateThread.unmock!({})
   end
 
   it "クラスである事の確認" do
