@@ -25,8 +25,7 @@ module Eventaskbot
         def execute(opts)
           #配列の値をバリデート
           [:access_token].each{ |v| return @res if validate opts, v }
-          @client = ::Yammer::Client.new(:access_token => opts[:access_token])
-
+          @client = ::Yammer::Client.new(:access_token => opts[:access_token]) if @client.nil?
           api_res = @client.all_groups
 
           unless api_res.code == 200
@@ -45,6 +44,10 @@ module Eventaskbot
               return @res
             end
           end
+
+          @res[:message] = "[Failed] find group bad not found"
+          @res[:status] = :fail
+          @res
         end
 
         #
