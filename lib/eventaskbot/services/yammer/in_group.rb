@@ -33,10 +33,37 @@ module Eventaskbot
 
           key     = "access_token_yammer"
 
-          opts    = Eventaskbot.options
-          storage = Eventaskbot::Storage.register_driver(opts[:storage])
+          conf    = Eventaskbot.options
+          storage = Eventaskbot::Storage.register_driver(conf[:storage])
 
           @client = ::Yammer::Client.new(:access_token => storage.get(key)) if @client.nil?
+          #グループ情報を取得する
+          opts[:group][:yammer].each do |v|
+            params  = {:page => 1}
+            api_url = "/api/v1/users/in_group/#{v}"
+            api_res = @client.get(api_url, params)
+
+            unless api_res.code == 200
+              @res[:message] = "[Failed] API in_group is failed. response code id #{api_res.code}"
+              @res[:status] = :fail
+              return @res
+            end
+
+            api_res.body[:users].each do |user|
+              pp user
+            end
+
+            #res_data = 
+            #while api_res.body[:more_available] == false
+            #  params[:page] = params[:page] + 1
+            #  api_url = "/api/v1/users/in_group/#{v}"
+            #  api_res = @client.get(api_url, params)
+            #end
+
+
+            pp api_res.body[:more_available]
+          end
+
           #@client.messages_in_group(
 
 

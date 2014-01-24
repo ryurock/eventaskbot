@@ -33,6 +33,21 @@ describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable
     expect(res).to eq(false)
   end
 
+  it "必須パラメーターが存在する場合はfalse" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+    end
+
+    Eventaskbot::Configurable::Merge.config_file({})
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    yam = Eventaskbot::Services::Yammer::InGroup.new
+    opts = {:group => { :yammer => [:techadmin] } }
+    res = yam.execute(opts)
+    pp res
+    #expect(res).to eq(false)
+  end
 #  it "エラーになる" do
 #    Eventaskbot.configure do |c|
 #      c.api = { :name => "in-group", :type => :collector }
