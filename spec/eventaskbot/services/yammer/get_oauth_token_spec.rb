@@ -39,7 +39,7 @@ describe Eventaskbot::Services::Yammer::GetOauthToken, "Eventaskbot service exec
 
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
-    opts = Eventaskbot::Api::Auth.options[:get_oauth_token][:yammer]
+    opts = Eventaskbot::Api::Auth.options[:get_oauth_token][:service][:yammer]
 
     #モック
     mock = double(Mechanize)
