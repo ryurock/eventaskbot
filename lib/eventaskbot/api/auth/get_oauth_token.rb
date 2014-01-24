@@ -60,14 +60,16 @@ module Eventaskbot
           #スレッド指定の場合はスレッドがなければ作成してある場合は参照する
           if opts.key?(:group) && opts[:group].key?(:yammer)
             opts[:group][:yammer].each do |v|
-              notify_key_name   = "notify_thread_#{v}"
-              notify_thread_id  = Eventaskbot::Storage.get(notify_key_name)
+              notify_thread_id = Eventaskbot::Storage.find_notify_thread_group_id(:yammer, v)
 
               #スレッドを作成する
               if notify_thread_id.nil?
                 thread_res        = Eventaskbot::Notifications::Yammer::CreateThread.new.execute(opts)
+
                 notify_thread_id  = thread_res[:response].body[:messages][0][:id]
-                Eventaskbot::Storage.set(notify_key_name, notify_thread_id)
+                notify_key        = Eventaskbot::Storage.get_notify_thread_group_key(:yammer, v)
+
+                Eventaskbot::Storage.set(notify_key, notify_thread_id)
               end
 
               opts[:thread_id] = notify_thread_id

@@ -52,7 +52,17 @@ module Eventaskbot
     # @return [Symbol] ストレージのデータ
     #
     def self.find_notify_thread_group_id(service_name, group)
-     self.driver.get("notify_thread_id_#{service_name.to_s}_#{group.to_s}")
+     self.driver.get(self.get_notify_thread_group_key(service_name, group))
+    end
+
+    #
+    # 通知スレッドグループIDのキーを取得する
+    # @param service_name[String] サービス名
+    # @param key[Symbol] 取得したいグループ名
+    # @return [String] キー名
+    #
+    def self.get_notify_thread_group_key(service_name,group)
+      "notify_thread_id_#{service_name.to_s}_#{group.to_s}"
     end
 
     #
