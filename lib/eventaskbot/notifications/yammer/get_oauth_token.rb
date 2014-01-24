@@ -58,6 +58,10 @@ module Eventaskbot
               return @res
             end
           end
+
+          @res[:message] = "[Failed] find group bad not found"
+          @res[:status] = :fail
+          @res
         end
 
         #
