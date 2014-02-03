@@ -12,39 +12,45 @@ module Eventaskbot
         attr_accessor :res
 
         def execute(params)
-          if opts.nil? || opts.key?(:group) == false
+          opts = User.option(:user_import)
+          @res = {:status => :fail, :message => []}
+
+          if opts.nil? || opts.key?(:service) == false
             @res[:message] << "[Failed] Setting service parametor not found"
             return @res
           end
 
-          #opts[:service].each do |service_name, v|
-          #  @res = v[:klass].execute(v)
-          #  return @res unless @res[:status] == :ok
+          opts[:service].each do |service_name, v|
+            #gループのインポートコマンドの実行
+            v[:command] = {:in_group => params[:in_group] } if params.key?(:in_group) && params[:in_group].is_a?(:Array)
 
-          #  #閲覧だけの場合はストレージに保存しない
-          #  return @res if params.key?(:watch_token)
+            @res = v[:klass].execute(v)
+            return @res unless @res[:status] == :ok
 
-          #  storage = Eventaskbot::Storage.register_driver(opts[:storage])
+           # #閲覧だけの場合はストレージに保存しない
+           # return @res if params.key?(:watch_token)
 
-          #  #ストレージにデータを保存
-          #  key   = "access_token_#{service_name}"
-          #  value = @res[:response]
+           # storage = Eventaskbot::Storage.register_driver(opts[:storage])
 
-          #  #tokenの差分を確認したい時
-          #  if params.key?(:diff_token)
-          #    diff_execute(key, value)
-          #  end
+           # #ストレージにデータを保存
+           # key   = "access_token_#{service_name}"
+           # value = @res[:response]
 
-          #  storage.set(key, value)
+           # #tokenの差分を確認したい時
+           # if params.key?(:diff_token)
+           #   diff_execute(key, value)
+           # end
 
-          #  next if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false || opts[:notify][:klass].key?(service_name) == false
+           # storage.set(key, value)
+
+           # next if opts.key?(:notify) == false || opts[:notify].key?(:klass) == false || opts[:notify][:klass].key?(service_name) == false
 
 
-          #  notify_opts = v
-          #  notify_opts[:access_token] = value
-          #  notify_opts = notify_opts.merge(opts[:notify])
-          #  notify_execute(notify_opts)
-          #end
+           # notify_opts = v
+           # notify_opts[:access_token] = value
+           # notify_opts = notify_opts.merge(opts[:notify])
+           # notify_execute(notify_opts)
+          end
 
           @res
         end

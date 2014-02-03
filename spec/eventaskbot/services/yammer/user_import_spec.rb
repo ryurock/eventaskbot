@@ -4,23 +4,23 @@ require File.expand_path(File.join('../../../', 'spec_helper'), File.dirname(__F
 
 require 'eventaskbot'
 require 'eventaskbot/configurable'
-require 'eventaskbot/services/yammer/in_group'
+require 'eventaskbot/services/yammer/user_import'
 
-describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable on Yammer InGroup Import Module" do
+describe Eventaskbot::Services::Yammer::UserImport, "Eventaskbot service executable on Yammer UserImport Import Module" do
   before(:each) do
   end
 
   it "クラスである事の確認" do
-    expect(Eventaskbot::Services::Yammer::InGroup.class).to eq(Class)
+    expect(Eventaskbot::Services::Yammer::UserImport.class).to eq(Class)
   end
 
   it "デフォルトステータスは:fail" do
-    yam = Eventaskbot::Services::Yammer::InGroup.new
+    yam = Eventaskbot::Services::Yammer::UserImport.new
     expect(yam.res[:status]).to eq(:fail)
   end
 
   it "必須パラメーターが存在しない場合は:fail" do
-    yam = Eventaskbot::Services::Yammer::InGroup.new
+    yam = Eventaskbot::Services::Yammer::UserImport.new
     opts = {:test => [:techadmin]}
     res = yam.execute(opts)
     expect(res[:status]).to eq(:fail)
@@ -35,7 +35,7 @@ describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
 
-    yam = Eventaskbot::Services::Yammer::InGroup.new
+    yam = Eventaskbot::Services::Yammer::UserImport.new
 
 
     #モック
@@ -61,7 +61,7 @@ describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable
     Eventaskbot::Configurable::Merge.config_file({})
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
 
-    yam = Eventaskbot::Services::Yammer::InGroup.new
+    yam = Eventaskbot::Services::Yammer::UserImport.new
 
     #モック
     mock = double(Yammer::Client)
@@ -82,7 +82,11 @@ describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable
       ]
     })
 
-    opts = {:group => { :yammer => [:techadmin] } }
+    opts = {
+      :group => [:techadmin],
+      :command => :in_group
+    }
+
     res = yam.execute(opts)
     expect(res[:status]).to eq(:ok)
   end

@@ -10,7 +10,7 @@ require "eventaskbot/notifications/yammer/create_thread"
 module Eventaskbot
   module Notifications
     module Yammer
-      class InGroup
+      class UserImport
 
         attr_accessor :client, :res, :prehook, :afterhook
 
