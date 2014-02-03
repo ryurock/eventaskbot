@@ -19,7 +19,7 @@ module Eventaskbot
         attr_accessor :client, :res, :code
 
         def initialize
-          @res    = {:status => :fail, :message => ""}
+          @res    = {:status => :fail, :message => "", :response => []}
         end
 
         #
@@ -49,30 +49,35 @@ module Eventaskbot
               return @res
             end
 
-            api_res.body[:users].each do |user|
-              pp user
+            while api_res.body[:more_available] == true do
+              params[:page] = params[:page] + 1
+              api_url = "/api/v1/users/in_group/#{v}"
+              api_res = @client.get(api_url, params)
+
+              api_res.body[:users].each do |user|
+                next if user[:type] != "user" || user.key?(:id) == false || user.key?(:name) == false || user.key?(:full_name) == false
+                @res[:response].push({
+                  :id        => user[:id],
+                  :name      => user[:name],
+                  :mension   => "@#{user[:name]}",
+                  :full_name => user[:full_name]
+                })
+
+              end
             end
 
-            #res_data = 
-            #while api_res.body[:more_available] == false
-            #  params[:page] = params[:page] + 1
-            #  api_url = "/api/v1/users/in_group/#{v}"
-            #  api_res = @client.get(api_url, params)
-            #end
+
+            table = Terminal::Table.new :headings => ['id', 'name', "mension", "full_name"], :rows => @res[:response]
+            message = "[Success] Yammer API in_group get\n"
+            message << "#{table}\n"
 
 
-            pp api_res.body[:more_available]
+            @res[:status] = :ok
+            @res[:message] = message
+
           end
 
-          #@client.messages_in_group(
-
-
-
-          @res = {
-            :status  => :ok,
-            #:message => "",#message,
-            #:response => json[:access_token][:token]
-          }
+          @res
         end
 
         #

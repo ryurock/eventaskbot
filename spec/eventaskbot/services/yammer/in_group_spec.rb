@@ -26,14 +26,33 @@ describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable
     expect(res[:status]).to eq(:fail)
   end
 
-  it "必須パラメーターが存在する場合はfalse" do
+  it "APiレスポンスコードが200ではない場合は:fail" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+    end
+
+    Eventaskbot::Configurable::Merge.config_file({})
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
     yam = Eventaskbot::Services::Yammer::InGroup.new
-    opts = {:group => [:techadmin]}
-    res = yam.validate(opts,:group)
-    expect(res).to eq(false)
+
+
+    #モック
+    mock = double(Yammer::Client)
+    mock_res = double(::Yammer::ApiResponse)
+
+    allow(mock).to receive(:get).and_return(mock_res)
+    allow(mock_res).to receive(:code).and_return(400)
+
+    yam.client = mock
+
+    opts = {:group => { :yammer => [:techadmin] } }
+    res = yam.execute(opts)
+    expect(res[:status]).to eq(:fail)
   end
 
-  it "必須パラメーターが存在する場合はfalse" do
+  it "必須パラメーターが存在する場合はok" do
     Eventaskbot.configure do |c|
       c.api = { :name => "get-oauth-token", :type => :auth }
       c.response = { :format => "json" }
@@ -45,58 +64,6 @@ describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable
     yam = Eventaskbot::Services::Yammer::InGroup.new
     opts = {:group => { :yammer => [:techadmin] } }
     res = yam.execute(opts)
-    pp res
-    #expect(res).to eq(false)
+    expect(res[:status]).to eq(:ok)
   end
-#  it "エラーになる" do
-#    Eventaskbot.configure do |c|
-#      c.api = { :name => "in-group", :type => :collector }
-#      c.response = { :format => "json" }
-#    end
-#
-#    Eventaskbot::Configurable::Merge.config_file({})
-#    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
-#    opts = Eventaskbot::Api::Collector.options[:in_group][:service][:yammer]
-#
-##    #モック
-##    mock = double(Mechanize)
-##
-##    allow(mock).to receive(:get).and_return(mock)
-##    allow(mock).to receive(:form_with).and_return(mock)
-##    allow(mock).to receive(:submit).and_return(mock)
-#
-#    yam = Eventaskbot::Services::Yammer::InGroup.new
-#    #yam.client = mock
-#    res = yam.execute(opts)
-#    pp res
-#    expect(res[:status]).to eq(:fail)
-#  end
-
-#  it "codeが上手く取得できた場合" do
-#    #モック
-#    mock = double(Mechanize)
-#
-#    allow(mock).to receive(:get).and_return(mock)
-#    allow(mock).to receive(:form_with).and_return(mock)
-#    allow(mock).to receive(:submit).and_return(mock)
-#    allow(mock).to receive(:body).and_return(MultiJson.dump({:access_token => { :token => "aaabbbbcccc" } }))
-#
-#    Eventaskbot.configure do |c|
-#      c.api = { :name => "get-oauth-token", :type => :auth }
-#      c.response = { :format => "json" }
-#    end
-#
-#    Eventaskbot::Configurable::Merge.config_file({})
-#    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
-#    opts = Eventaskbot::Api::Auth.options[:get_oauth_token][:service]
-#
-#    yam = Eventaskbot::Services::Yammer::GetOauthToken.new
-#    yam.client = mock
-#    yam.code = "hoge"
-#
-#    opts.each do |service,v|
-#      res = yam.execute(v)
-#      expect(res[:status]).to eq(:ok)
-#    end
-#  end
 end
