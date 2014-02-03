@@ -26,6 +26,45 @@ describe Eventaskbot::Services::Yammer::UserImport, "Eventaskbot service executa
     expect(res[:status]).to eq(:fail)
   end
 
+  it "コマンドのオプションが存在しない引数の場合は:fail" do
+    Eventaskbot.configure do |c|
+      c.api = { :name => "get-oauth-token", :type => :auth }
+      c.response = { :format => "json" }
+    end
+
+    Eventaskbot::Configurable::Merge.config_file({})
+    Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
+
+    yam = Eventaskbot::Services::Yammer::UserImport.new
+
+    #モック
+    mock = double(Yammer::Client)
+    mock_res = double(::Yammer::ApiResponse)
+
+    allow(mock).to receive(:get).and_return(mock_res)
+    allow(mock_res).to receive(:code).and_return(200)
+    allow(mock_res).to receive(:body).and_return({
+      :more_available => false,
+      :users          => [
+        {
+          :type => "user",
+          :id   => 10000000,
+          :name => "fuga",
+          :full_name => "hoge_fuga"
+
+        }
+      ]
+    })
+
+    opts = {
+      :group => [:techadmin],
+      :command => :hoge
+    }
+
+    res = yam.execute(opts)
+    expect(res[:status]).to eq(:fail)
+  end
+
   it "APiレスポンスコードが200ではない場合は:fail" do
     Eventaskbot.configure do |c|
       c.api = { :name => "get-oauth-token", :type => :auth }
@@ -47,7 +86,11 @@ describe Eventaskbot::Services::Yammer::UserImport, "Eventaskbot service executa
 
     yam.client = mock
 
-    opts = {:group => { :yammer => [:techadmin] } }
+    opts = {
+      :group => [:techadmin],
+      :command => :in_group
+    }
+
     res = yam.execute(opts)
     expect(res[:status]).to eq(:fail)
   end
