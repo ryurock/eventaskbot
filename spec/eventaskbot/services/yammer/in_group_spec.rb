@@ -62,6 +62,26 @@ describe Eventaskbot::Services::Yammer::InGroup, "Eventaskbot service executable
     Eventaskbot::Configurable::Filter.filter(Eventaskbot.options)
 
     yam = Eventaskbot::Services::Yammer::InGroup.new
+
+    #モック
+    mock = double(Yammer::Client)
+    mock_res = double(::Yammer::ApiResponse)
+
+    allow(mock).to receive(:get).and_return(mock_res)
+    allow(mock_res).to receive(:code).and_return(200)
+    allow(mock_res).to receive(:body).and_return({
+      :more_available => false,
+      :users          => [
+        {
+          :type => "user",
+          :id   => 10000000,
+          :name => "fuga",
+          :full_name => "hoge_fuga"
+
+        }
+      ]
+    })
+
     opts = {:group => { :yammer => [:techadmin] } }
     res = yam.execute(opts)
     expect(res[:status]).to eq(:ok)

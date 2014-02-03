@@ -37,6 +37,7 @@ module Eventaskbot
           storage = Eventaskbot::Storage.register_driver(conf[:storage])
 
           @client = ::Yammer::Client.new(:access_token => storage.get(key)) if @client.nil?
+
           #グループ情報を取得する
           opts[:group][:yammer].each do |v|
             params  = {:page => 1}
@@ -66,15 +67,12 @@ module Eventaskbot
               end
             end
 
-
             table = Terminal::Table.new :headings => ['id', 'name', "mension", "full_name"], :rows => @res[:response]
             message = "[Success] Yammer API in_group get\n"
             message << "#{table}\n"
 
-
             @res[:status] = :ok
             @res[:message] = message
-
           end
 
           @res
