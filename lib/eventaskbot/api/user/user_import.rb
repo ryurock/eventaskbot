@@ -22,7 +22,7 @@ module Eventaskbot
 
           opts[:service].each do |service_name, v|
             #gループのインポートコマンドの実行
-            v[:command] = {:in_group => params[:in_group] } if params.key?(:in_group) && params[:in_group].is_a?(:Array)
+            v[:import_type] = params[:import_type] if params.key?(:import_type) && params[:import_type] == :in_group
 
             @res = v[:klass].execute(v)
             return @res unless @res[:status] == :ok

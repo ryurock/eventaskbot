@@ -253,6 +253,80 @@ eventaskbot get-oauth-token '{:diff_token => true}'
 [Success] notification is API get-oauth-token
 ```
 
+
+
+
+
+
+### User APIs
+
+ユーザー情報系API
+
+* 認証ができるサービスの一覧
+
+ * [Yammer](https://www.yammer.com)
+
+### User/user-import
+
+----
+
+サービスのユーザーデータをストレージに保存します
+
+#### API Parametor
+
+引数    | 必須 |  値  | デフォルト | 説明
+--------|------|------|------|------
+:client_id | o | text | none | access_tokenの取得に必要なclient_id 
+:client_secret | o | text | none | access_tokenの取得に必要なclient_secret
+:user | o | text | none | サービスのuser_id(Email)
+:pass | o | text | none | サービスのpassword
+:import_type | o | symbol | none | import種別を指定します :in_group => 対象グループを取り込む :user => 特定のユーザーを取り込む
+
+
+上記必須パラメーター[:client_id,:client_secret,:user,:pass]はEventaskbotFileに記載しておけば自動で設定を読みにいきます。 
+
+#### Example
+
+* グループ単位でユーザー情報をインポートする
+
+EventaskbotFile
+
+```
+Eventaskbot::Api::User.configure do |c| 
+# User API add setting
+  c.user_import = {:service => { :yammer => { :group => [:グループ名] } } 
+  }
+end
+
+Eventaskbot.configure do |c|
+  c.service = {
+    :yammer => { #Using Yammer Service
+      :client_id     => 'your client_id',
+      :client_secret => 'your client_secret',
+    }
+  }
+end
+
+```
+
+* グループ単位でユーザー情報をインポートする
+
+```
+eventaskbot user-import '{:import_type => :in_group}'
+[Success] Yammer API in_group get
++-------------------------------+--------------------------------------+---------------------------------------+---------------------------------------------+
+| id                            | name                                 | mension                               | full_name                                   |
++-------------------------------+--------------------------------------+---------------------------------------+---------------------------------------------+
+| 10000000                    | hoge                            | @hoge                            | hoge                      
+```
+
+
+
+
+
+
+
+
 ## Contributing
 
 1. Fork it

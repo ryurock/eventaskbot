@@ -30,11 +30,15 @@ Eventaskbot::Api::Auth.configure do |c|
 # }
 end
 
-# Group API setting
-Eventaskbot::Api::Group.configure do |c|
-# Group API add setting
+# User API setting
+Eventaskbot::Api::User.configure do |c|
+# User API add setting
 # example
-# c.user_import = {:service => [:yammer, :redmine]}
+#  c.user_import = {
+#    :service => { 
+#      :yammer => { :group => [:techadmin] }
+#    }
+#  }
 end
 
 Eventaskbot.configure do |c|

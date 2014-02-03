@@ -58,7 +58,7 @@ describe Eventaskbot::Services::Yammer::UserImport, "Eventaskbot service executa
 
     opts = {
       :group => [:techadmin],
-      :command => :hoge
+      :import_type => :hoge
     }
 
     res = yam.execute(opts)
@@ -88,7 +88,7 @@ describe Eventaskbot::Services::Yammer::UserImport, "Eventaskbot service executa
 
     opts = {
       :group => [:techadmin],
-      :command => :in_group
+      :import_type => :in_group
     }
 
     res = yam.execute(opts)
@@ -127,7 +127,7 @@ describe Eventaskbot::Services::Yammer::UserImport, "Eventaskbot service executa
 
     opts = {
       :group => [:techadmin],
-      :command => :in_group
+      :import_type => :in_group
     }
 
     res = yam.execute(opts)

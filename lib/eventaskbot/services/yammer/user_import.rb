@@ -30,7 +30,7 @@ module Eventaskbot
         #
         def execute(opts)
           #配列の値をバリデート
-          [:group, :command].each{ |v| return @res if validate opts, v }
+          [:group, :import_type].each{ |v| return @res if validate opts, v }
 
           key     = "access_token_yammer"
 
@@ -39,21 +39,21 @@ module Eventaskbot
 
           @client = ::Yammer::Client.new(:access_token => storage.get(key)) if @client.nil?
 
-          command = nil
+          import_type = nil
 
           [:in_group, :user].each do |v|
-            next unless opts[:command] == v
-            command = v
+            next unless opts[:import_type] == v
+            import_type = v
           end
 
-          if command.nil?
-            @res[:message] = "[Failed] API options command is unknown. #{opts[:command]}"
+          if import_type.nil?
+            @res[:message] = "[Failed] API options command is unknown. #{opts[:import_type]}"
             @res[:status] = :fail
             return @res
           end
 
           #グループからユーザー情報をインポートする
-          in_group_execute(opts) if command == :in_group
+          in_group_execute(opts) if import_type == :in_group
 
           @res
         end
@@ -76,6 +76,8 @@ module Eventaskbot
               return @res
             end
 
+            table_rows = []
+
             while api_res.body[:more_available] == true do
               params[:page] = params[:page] + 1
               api_url = "#{@api_url}#{v}"
@@ -89,10 +91,12 @@ module Eventaskbot
                   :mension   => "@#{user[:name]}",
                   :full_name => user[:full_name]
                 })
+
+                table_rows << [user[:id], user[:name], "@#{user[:name]}", user[:full_name]]
               end
             end
 
-            table = Terminal::Table.new :headings => ['id', 'name', "mension", "full_name"], :rows => @res[:response]
+            table = Terminal::Table.new :headings => ['id', 'name', "mension", "full_name"], :rows => table_rows, :style => {:width => 150}
             message = "[Success] Yammer API in_group get\n"
             message << "#{table}\n"
 
